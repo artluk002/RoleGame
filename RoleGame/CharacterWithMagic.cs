@@ -1,26 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RoleGame
 {
     public class CharacterWithMagic : Character
     {
-        public UInt32 CurrentMP;
-        public UInt32 MaxMP;
-        public CharacterWithMagic(uint CurrentMp, uint MaxMP)
+        public UInt32 currentMP;
+        public UInt32 maxMP;
+        public CharacterWithMagic(uint CurrentMp, uint MaxMP, string name, CharacterRace race, CharacterGender gender, UInt32 age) : base(name, race, gender, age)
         {
-            CurrentMP = CurrentMp;
-            MaxMP = MaxMP;
+            currentMP = CurrentMp;
+            maxMP = MaxMP;
         }
-        public Heal()
+        public CharacterWithMagic() : base()
         {
-            if(CurrentHealth<MaxHealth)
-            {  
-
-            }
+            currentMP = 100;
+            maxMP = 100;
         }
-    }//never gonna give you up
+        public void Heal(Character character)
+        {
+            if (((character.MaxHealth - character.CurrentHealth) * 2) <= currentMP)
+                character.Heal(character.MaxHealth - character.CurrentHealth);
+            else
+                character.Heal(currentMP / 2);
+        }
+    }
 }

@@ -13,12 +13,12 @@ namespace RoleGame
     /// </summary>
     public enum CharacterState
     {
-        Normal,
-        Weakened,
-        Painful,
-        Poisoned,
-        Paralyzed,
-        Dead,
+        Normal, // нормально
+        Weakened, // ослаблен
+        Painful, // болен
+        Poisoned, // отравлен
+        Paralyzed, // парализован
+        Dead, // мёртв
     }
     /// <summary>
     /// поле с рассами персонажа
