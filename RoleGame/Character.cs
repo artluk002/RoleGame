@@ -54,7 +54,7 @@ namespace RoleGame
         };
         public UInt32 Id { get; private set; }
         public String Name { get; private set; }
-        public CharacterState State { get; private set; }// ?
+        public CharacterState State { get; private set; }
         private bool CanSpeak { get; set; }
         private bool CanMove {get; set;}
         public CharacterRace Race { get; private set; }
@@ -174,17 +174,30 @@ namespace RoleGame
         public int CompareTo(Character other) => this.XP.CompareTo(other.XP);
         public void Heal(UInt32 HP)
         {
+            if (CurrentHealth == 0)
+            {
+                Console.WriteLine($"The character {Name} is Dead");
+            }
             if (CurrentHealth + HP >= MaxHealth)
+            {
                 CurrentHealth = MaxHealth;
+                Console.WriteLine($"The character {Name} was healing on full");
+            }
             else
+            {
                 CurrentHealth += HP;
+                Console.WriteLine($"The character {Name} was healing on {HP} HP");
+            }
             if (Health != null)
                 Health(this, new PersonArgs(CurrentHealth, MaxHealth));
         }
         public void TakeDamage(UInt32 HP)
         {
-            if(CurrentHealth - HP <= 0)
+            if (CurrentHealth - HP <= 0)
+            {
+                Console.WriteLine($"The character {Name} is Died!");
                 CurrentHealth = 0;
+            }
             else
                 CurrentHealth -= HP;
             if (Health != null)
