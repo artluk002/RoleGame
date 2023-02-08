@@ -16,6 +16,19 @@ namespace RoleGame
             currentMP = 100;
             maxMP = 100;
         }
+        public void RestoreMP(UInt32 MP)
+        {
+            if(currentMP + MP > maxMP)
+            {
+                Console.WriteLine($"The {Name} has full mana");
+                currentMP = maxMP;
+            }
+            else
+            {
+                Console.WriteLine($"The {Name} restored {MP} units of mana");
+                currentMP += MP;
+            }
+        }
         public void Heal(Character character)
         {
             if (((character.MaxHealth - character.CurrentHealth) * 2) <= currentMP)

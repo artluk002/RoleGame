@@ -3,14 +3,14 @@ namespace RoleGame
 {
     public abstract class Artifact:IMagic
     {
-        public UInt32 power;
+        public UInt32 forse;
         bool rewenability;
-        public Artifact(UInt32 Power, bool Reventability)
+        public Artifact(UInt32 forse, bool Reventability)
         {
-            this.power= Power;
+            this.forse= forse;
             this.rewenability = Reventability;
         }
 
-        public abstract void Wiz(Character character, int force = 10);
+        public abstract void Wiz(ref Character character, int force = 10);
     }
 }

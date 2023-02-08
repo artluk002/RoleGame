@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace RoleGame
 {
-    public interface Magic
+    public interface IMagic
     {
-        void Wiz(Character character, int force = 10);
+        void Wiz(ref Character character, int force = 10);
     }
 }

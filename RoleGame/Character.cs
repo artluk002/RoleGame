@@ -54,7 +54,7 @@ namespace RoleGame
         };
         public UInt32 Id { get; private set; }
         public String Name { get; private set; }
-        public CharacterState State { get; private set; }
+        public CharacterState State { get; set; }
         private bool CanSpeak { get; set; }
         private bool CanMove {get; set;}
         public CharacterRace Race { get; private set; }
