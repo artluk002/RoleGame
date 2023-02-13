@@ -5,13 +5,16 @@ namespace RoleGame
     {
         public UInt32 forse;
         bool rewenability;
-        public Artifact(UInt32 forse, bool Reventability)
+        public Artifact(UInt32 Forse, bool Reventability)
         {
-            d
-            this.forse= forse;
+            this.forse= Forse;
             this.rewenability = Reventability;
         }
-
+        public Artifact(UInt32 Forse, bool Reventability)
+        {
+            Forse = 100;
+        }
         public abstract void Wiz(ref Character character, int force = 10);
+        public abstract void Wiz(ref Character character);
     }
 }

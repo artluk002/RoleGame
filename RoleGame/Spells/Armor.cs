@@ -18,12 +18,20 @@ namespace RoleGame
                 Console.WriteLine("You can't use Armor spell with current mana");
                 return;
             }
-
-
+            character.Shield += (int)Math.Round((double)MpForSpell / (double)MinMPValue);
+            Console.WriteLine($"The {character.Name} shield has been increased to {character.Shield}");
+            characterWithMagic.currentMP -= MpForSpell;
         }
         public override void Wiz(ref Character character)
         {
-            throw new NotImplementedException();
+            if(characterWithMagic.currentMP < 50)
+            {
+                Console.WriteLine("You can't use Armor spell with current mana");
+                return;
+            }
+            character.Shield++;
+            Console.WriteLine($"The {character.Name} shield has been increased to {character.Shield}");
+            characterWithMagic.currentMP -= MinMPValue;
         }
     }
 }

@@ -21,5 +21,10 @@ namespace RoleGame
         {
             throw new NotImplementedException();
         }
+
+        public override void Wiz(ref Character character)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

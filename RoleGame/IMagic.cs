@@ -9,5 +9,6 @@ namespace RoleGame
     public interface IMagic
     {
         void Wiz(ref Character character, int force = 10);
+        void Wiz(ref Character character);
     }
 }

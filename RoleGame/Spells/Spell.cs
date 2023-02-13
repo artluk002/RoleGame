@@ -9,7 +9,7 @@ namespace RoleGame
     public abstract class Spell : IMagic
     {
         public UInt32 MinMPValue;
-        bool IsVerbalSpell;//#6,#2
+        bool IsVerbalSpell;
         bool IsMotorSpell;
         public CharacterWithMagic characterWithMagic;
         public abstract void Wiz(ref Character character, int force = 10);
