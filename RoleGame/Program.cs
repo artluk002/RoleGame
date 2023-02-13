@@ -11,7 +11,7 @@ namespace RoleGame
     {
         static void Main(string[] args)
         {
-            Character character = new Character("Andrew", CharacterRace.Goblin, CharacterGender.Non, 18);
+            Character character = new Character("Andrew", CharacterRace.Goblin, CharacterGender.Male, 18);
             Console.WriteLine(character);
             character.Heal(200);
             Console.WriteLine(character);

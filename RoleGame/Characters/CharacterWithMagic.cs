@@ -14,7 +14,7 @@ namespace RoleGame
         public CharacterWithMagic() : base()
         {
             currentMP = 100;
-            maxMP = 100;
+            maxMP = 150;
         }
         public void RestoreMP(UInt32 MP)
         {

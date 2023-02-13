@@ -1,4 +1,5 @@
 ﻿using System;
+
 namespace RoleGame
 {
     public enum BottleSize
@@ -9,22 +10,20 @@ namespace RoleGame
     }
     public class LivingWaterBottle : Artifact
     {
-        public BottleSize size;
+        public BottleSize Size { get; set; }
 
-        public LivingWaterBottle(BottleSize Size, UInt32 Forse, bool Reventability) : base(Forse, Reventability)
+        public LivingWaterBottle(BottleSize size, Character character) : base(0, false, character) 
         {
-            this.size = Size;
+            this.Size = Size;
         }
-        
-        public void Heal(Character character) => character.Heal((UInt32)size);
         public override void Wiz(ref Character character, int force = 10)
         {
-            throw new NotImplementedException();
+            Console.WriteLine("This artifact can't be used with force!");
+            return;
         }
-
         public override void Wiz(ref Character character)
         {
-            throw new NotImplementedException();
+            character.Heal((UInt32)Size);
         }
     }
 }

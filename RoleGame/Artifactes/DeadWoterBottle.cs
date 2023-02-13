@@ -3,22 +3,24 @@ namespace RoleGame
 {
     public class DeadWaterBottle : Artifact
     {
-        public BottleSize size;
+        public BottleSize Size { get; set; } 
 
-        public DeadWaterBottle(BottleSize Size, UInt32 Forse, bool Reventability) : base(Forse, Reventability)
+        public DeadWaterBottle(BottleSize size, Character character) : base(0, false, character)
         {
-            this.size = Size;
+            this.Size = size;
         }
-
-        public void RestoreMP(CharacterWithMagic wizard) => wizard.RestoreMP((UInt32)size);
         public override void Wiz(ref Character character, int force = 10)
         {
-            throw new NotImplementedException();
+            Console.WriteLine("This artifact can't be used with force!");
+            return;
         }
-
         public override void Wiz(ref Character character)
         {
-            throw new NotImplementedException();
+            if(character as CharacterWithMagic != null)
+            {
+                (character as CharacterWithMagic).RestoreMP((UInt32)Size);
+                Console.WriteLine($"Mana of {character.Name} has been increased to {(character as CharacterWithMagic).currentMP}");
+            }
         }
     }
 }

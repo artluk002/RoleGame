@@ -1,23 +1,28 @@
 ﻿using System;
+
 namespace RoleGame
 {
     public class Staff : Artifact
     {
-        public UInt32 fforse;
-        public Staff(UInt32 Fforse, UInt32 Forse, bool Reventability) : base(Forse, Reventability)
-        {
-            this.fforse = Fforse;
-        }
-        public void TakeDamage(Character character) => character.TakeDamage();
-
+        
+        public Staff(ref Character character) : base(100, true, character) { }
         public override void Wiz(ref Character character, int force = 10)
         {
-            throw new NotImplementedException();
+            if (Forse - force < 0)
+            {
+                character.TakeDamage(Forse);
+                Forse = 0;
+            }
+            else
+            {
+                Forse -= (UInt32)force;
+                character.TakeDamage((UInt32)force);
+            }
         }
-
         public override void Wiz(ref Character character)
         {
-            throw new NotImplementedException();
+            Console.WriteLine("This artifact can't be used without force!");
+            return;
         }
     }
 }

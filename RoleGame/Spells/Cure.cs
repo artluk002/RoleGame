@@ -19,7 +19,7 @@ namespace RoleGame
                 Console.WriteLine($"The {character.Name} isn't Painful");
             else
             {
-                if (character.CurrentHealth < character.MaxHealth * 0.5)
+                if (character.CurrentHealth < character.MaxHealth * 0.1)
                     character.State = CharacterState.Weakened;
                 else
                     character.State = CharacterState.Normal;

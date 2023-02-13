@@ -35,7 +35,7 @@ namespace RoleGame
     {
         Male,
         Female,
-        Non,
+        
     }
     /// <summary>
     /// класс Персонаж
@@ -145,10 +145,6 @@ namespace RoleGame
                             break;
                         case "female":
                             Gender = CharacterGender.Female;
-                            validDate = true;
-                            break;
-                        case "non":
-                            Gender = CharacterGender.Non;
                             validDate = true;
                             break;
                         default:
