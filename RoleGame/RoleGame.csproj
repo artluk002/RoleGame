@@ -43,6 +43,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Artifactes\DecoctionOfFrogLegs.cs" />
+    <Compile Include="Artifactes\PoisonousSaliva.cs" />
     <Compile Include="Spells\AddHealth.cs" />
     <Compile Include="Spells\Antidote.cs" />
     <Compile Include="Spells\Armor.cs" />
