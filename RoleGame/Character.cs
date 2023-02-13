@@ -60,7 +60,7 @@ namespace RoleGame
         public CharacterRace Race { get; private set; }
         public CharacterGender Gender { get; private set; }
         public UInt32 Age { get; private set; }
-        public UInt32 CurrentHealth { get; private set; }
+        public UInt32 CurrentHealth { get; set; }
         public UInt32 MaxHealth { get; private set; }
         public UInt32 XP { get; set; }
         private Random r;
