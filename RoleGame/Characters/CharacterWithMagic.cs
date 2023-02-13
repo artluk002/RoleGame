@@ -29,6 +29,7 @@ namespace RoleGame
                 currentMP += MP;
             }
         }
+        
         public void Heal(Character character)
         {
             if (((character.MaxHealth - character.CurrentHealth) * 2) <= currentMP)

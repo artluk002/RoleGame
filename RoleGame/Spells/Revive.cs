@@ -11,6 +11,10 @@ namespace RoleGame
         public Revive(CharacterWithMagic characterWithMagic) : base(150, false, false, characterWithMagic) { }
         public override void Wiz(ref Character character, int force = 10)
         {
+            throw new NotImplementedException();
+        }
+        public override void Wiz(ref Character character)
+        {
             if (character.State != CharacterState.Dead)
                 Console.WriteLine($"The {character.Name} isn't {CharacterState.Poisoned.ToString()}");
             else

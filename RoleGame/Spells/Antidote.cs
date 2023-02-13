@@ -14,11 +14,14 @@ namespace RoleGame
         }
         public override void Wiz(ref Character character, int force = 10)
         {
+            throw new NotImplementedException();
+        }
+        public override void Wiz(ref Character character)
+        {
             if (character.State != CharacterState.Poisoned)
                 Console.WriteLine($"The {character.Name} isn't {CharacterState.Poisoned.ToString()}");
             else
             {
-
                 if (character.CurrentHealth < character.MaxHealth * 0.5)
                     character.State = CharacterState.Weakened;
                 else

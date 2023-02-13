@@ -15,6 +15,11 @@ namespace RoleGame
             characterWithMagic.currentMP -= MpForSpell;
             character.Heal(MpForSpell / 2);
         }
+        public override void Wiz(ref Character character)
+        {
+            Console.WriteLine("You need to use force to use this magic");
+            return;
+        }
         public AddHealth(ref CharacterWithMagic characterWithMagic) : base(0, false, false, characterWithMagic)
         {
         }

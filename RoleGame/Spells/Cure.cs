@@ -8,18 +8,17 @@ namespace RoleGame
 {
     public class Cure : Spell
     {
-        public Cure(CharacterWithMagic characterWithMagic) : base(20, false, false, characterWithMagic)
-        {
-
-        }
-
+        public Cure(CharacterWithMagic characterWithMagic) : base(20, false, false, characterWithMagic) { }
         public override void Wiz(ref Character character, int force = 10)
+        {
+            throw new NotImplementedException();
+        }
+        public override void Wiz(ref Character character)
         {
             if(character.State != CharacterState.Painful)
                 Console.WriteLine($"The {character.Name} isn't Painful");
             else
             {
-
                 if (character.CurrentHealth < character.MaxHealth * 0.5)
                     character.State = CharacterState.Weakened;
                 else

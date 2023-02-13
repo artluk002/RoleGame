@@ -63,6 +63,7 @@ namespace RoleGame
         public UInt32 CurrentHealth { get; set; }
         public UInt32 MaxHealth { get; private set; }
         public UInt32 XP { get; set; }
+        public int Shield { get; set; }
         private Random r;
 
         /// <summary>
@@ -193,6 +194,12 @@ namespace RoleGame
         }
         public void TakeDamage(UInt32 HP)
         {
+            if(Shield > 0)
+            {
+                Shield--;
+                Console.WriteLine($"The Shield is take damege, current shield count is {Shield}");
+                return;
+            }
             if (CurrentHealth - HP <= 0)
             {
                 Console.WriteLine($"The character {Name} is Died!");
