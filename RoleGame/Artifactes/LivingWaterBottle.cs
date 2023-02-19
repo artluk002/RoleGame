@@ -2,6 +2,7 @@
 
 namespace RoleGame
 {
+   
     public enum BottleSize
     {
         Low = 10,
@@ -10,6 +11,7 @@ namespace RoleGame
     }
     public class LivingWaterBottle : Artifact
     {
+        public static string Name = "LivingWaterBottle";
         public BottleSize Size { get; set; }
 
         public LivingWaterBottle(BottleSize size, Character character) : base(0, false, character) 

@@ -3,6 +3,7 @@ namespace RoleGame
 {
     public class DeadWaterBottle : Artifact
     {
+        public static string Name = "DeadWaterBottle";
         public BottleSize Size { get; set; } 
 
         public DeadWaterBottle(BottleSize size, Character character) : base(0, false, character)

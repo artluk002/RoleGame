@@ -8,14 +8,30 @@ namespace RoleGame.Artifactes
 {
     public class PoisonousSaliva : Artifact
     {
+        public static string Name = "PoisonousSaliva";
+        public PoisonousSaliva(Character character) : base(20, true, character) { }
         public override void Wiz(ref Character character, int force = 10)
         {
-            throw new NotImplementedException();
+            if (character.State == CharacterState.Dead)
+            {
+                Console.WriteLine($"The {character.Name} can't be poisoned because he is dead!");
+                return;
+            }
+            else
+            {
+                if (character.State == CharacterState.Weakened || character.State == CharacterState.Normal)
+                {
+                    character.State = CharacterState.Poisoned;
+                    character.TakeDamage((UInt32)force);
+                    Console.WriteLine($"The {character.Name} is {character.State.ToString()} and current health is {character.CurrentHealth}");
+                }
+            }
         }
-
         public override void Wiz(ref Character character)
         {
-            throw new NotImplementedException();
+            Console.WriteLine("This artifact can't be used without force");
+            return;
         }
     }
+
 }

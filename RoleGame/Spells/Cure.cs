@@ -8,7 +8,10 @@ namespace RoleGame
 {
     public class Cure : Spell
     {
-        public Cure(CharacterWithMagic characterWithMagic) : base(20, false, false, characterWithMagic) { }
+        public static string Name = "Cure";
+        public Cure(CharacterWithMagic characterWithMagic) : base(20, false, false, characterWithMagic)
+        {
+        }
         public override void Wiz(ref Character character, int force = 10)
         {
             throw new NotImplementedException();

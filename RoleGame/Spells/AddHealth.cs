@@ -20,8 +20,9 @@ namespace RoleGame
             Console.WriteLine("You need to use force to use this magic");
             return;
         }
-        public AddHealth(ref CharacterWithMagic characterWithMagic) : base(0, false, false, characterWithMagic)
+        public AddHealth(CharacterWithMagic characterWithMagic) : base(0, false, false, characterWithMagic)
         {
         }
+        public static string Name = "AddHealth";
     }
 }

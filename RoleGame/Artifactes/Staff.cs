@@ -4,7 +4,8 @@ namespace RoleGame
 {
     public class Staff : Artifact
     {
-        
+
+        public static string Name = "Staff";
         public Staff(ref Character character) : base(100, true, character) { }
         public override void Wiz(ref Character character, int force = 10)
         {

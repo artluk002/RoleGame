@@ -4,6 +4,7 @@ namespace RoleGame
 {
     public abstract class Artifact:IMagic
     {
+        public static string Name = "Artifact";
         public UInt32 Forse { get; set; }
         public bool Rewenability { get; set; }
         public Character character { get; set; }

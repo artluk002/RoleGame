@@ -9,6 +9,7 @@ namespace RoleGame
     public abstract class Spell : IMagic
     {
         public UInt32 MinMPValue;
+        public static string Name = "Spell";
         bool IsVerbalSpell;
         bool IsMotorSpell;
         public CharacterWithMagic characterWithMagic;
@@ -21,5 +22,6 @@ namespace RoleGame
             IsMotorSpell = isMotorSpell;
             this.characterWithMagic = characterWithMagic;
         }
+        
     }
 }

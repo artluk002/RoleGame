@@ -8,6 +8,7 @@ namespace RoleGame.Artifactes
 {
     public class DecoctionOfFrogLegs : Artifact
     {
+        public static string Name = "DecoctionOfFrogLegs";
         public DecoctionOfFrogLegs(Character character) : base(0, false, character) { }
         public override void Wiz(ref Character character, int force = 10)
         {

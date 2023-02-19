@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MyOwnLib;
+using System;
+using System.Collections.Generic;
 
 namespace RoleGame
 {
@@ -6,15 +8,18 @@ namespace RoleGame
     {
         public UInt32 currentMP;
         public UInt32 maxMP;
-        public CharacterWithMagic(uint CurrentMp, uint MaxMP, string name, CharacterRace race, CharacterGender gender, UInt32 age) : base(name, race, gender, age)
+        public Dictionary<string, Spell> Spells;
+        public CharacterWithMagic(string name, CharacterRace race, CharacterGender gender, UInt32 age) : base(name, race, gender, age)
         {
-            currentMP = CurrentMp;
-            maxMP = MaxMP;
+            Spells = new Dictionary<string, Spell>();
+            currentMP = 150;
+            maxMP = 150;
         }
         public CharacterWithMagic() : base()
         {
-            currentMP = 100;
+            currentMP = 150;
             maxMP = 150;
+            Spells = new Dictionary<string, Spell>();
         }
         public void RestoreMP(UInt32 MP)
         {
@@ -37,5 +42,15 @@ namespace RoleGame
             else
                 character.Heal(currentMP / 2);
         }
+        public override string ToString() => $"==Character: {Name}==\n" +
+            $"Id: {Id},state: {State.ToString()}\n" +
+            $"race: {Race.ToString()}, gender: {Gender.ToString()}, age: {Age}\n" +
+            $"speak: {(CanSpeak == true ? "yes" : "no")}, move: {(CanMove == true ? "yes" : "no")}\n" +
+            $"Health: {CurrentHealth}/{MaxHealth}\n" +
+            $"Mana {currentMP}/{maxMP}\n" +
+            $"Damage: {MinDamage}/{MaxDamage}" +
+            $"Level: {Level}\n" +
+            $"XP - {CurrXp}/{XpToNextLvl}\n" +
+            $"============={Functions.Fill("=", Name.Length)}==";
     }
 }

@@ -8,10 +8,9 @@ namespace RoleGame
 {
     internal class Antidote : Spell
     {
+        public static string Name = "Antidote";
         public Antidote(CharacterWithMagic characterWithMagic) : base(30, false, false, characterWithMagic)
-        {
-            
-        }
+        { }
         public override void Wiz(ref Character character, int force = 10)
         {
             throw new NotImplementedException();

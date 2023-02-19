@@ -15,6 +15,5 @@ namespace RoleGame
             Health = health;
             MaxHealth = maxHealth;
         }
-
     }
 }
