@@ -11,11 +11,11 @@ namespace RoleGame.Spells
         public static string Name = "Otomri";
         public Otomri(CharacterWithMagic characterWithMagic) : base(85, false, false, characterWithMagic)
         {
+            type = SpellType.Force;
         }
         public override void Wiz(ref Character character, int force = 10)
         {
-            Console.WriteLine("You cant use this spell with force");
-            return;
+            Wiz(ref character);
         }
 
         public override void Wiz(ref Character character)
@@ -35,5 +35,6 @@ namespace RoleGame.Spells
             }
             characterWithMagic.currentMP -= MinMPValue;
         }
+        public override string ToString() => Name;
     }
 }

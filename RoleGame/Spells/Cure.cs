@@ -14,7 +14,7 @@ namespace RoleGame
         }
         public override void Wiz(ref Character character, int force = 10)
         {
-            throw new NotImplementedException();
+            Wiz(ref character);
         }
         public override void Wiz(ref Character character)
         {
@@ -30,5 +30,6 @@ namespace RoleGame
             }
             characterWithMagic.currentMP -= MinMPValue;
         }
+        public override string ToString() => Name;
     }
 }

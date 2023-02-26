@@ -12,7 +12,7 @@ namespace RoleGame
         public static string Name = "Armor";
         public Armor(CharacterWithMagic characterWithMagic) : base(50, false, false, characterWithMagic)
         {
-            
+            type = SpellType.Force;
         }
         public override void Wiz(ref Character character, int force = 10)
         {
@@ -38,5 +38,6 @@ namespace RoleGame
             Console.WriteLine($"The {character.Name} shield has been increased to {character.Shield}");
             characterWithMagic.currentMP -= MinMPValue;
         }
+        public override string ToString() => Name;
     }
 }

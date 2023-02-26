@@ -17,12 +17,14 @@ namespace RoleGame
         }
         public override void Wiz(ref Character character)
         {
-            Console.WriteLine("You need to use force to use this magic");
-            return;
+            Wiz(ref character);
         }
         public AddHealth(CharacterWithMagic characterWithMagic) : base(0, false, false, characterWithMagic)
         {
+            type = SpellType.Force;
         }
         public static string Name = "AddHealth";
+        public override string ToString() => Name;
+        
     }
 }

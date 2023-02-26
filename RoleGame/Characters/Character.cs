@@ -66,8 +66,8 @@ namespace RoleGame
                     ((Character)sender).Level++;
                     ((Character)sender).XpToNextLvl += (int)(((Character)sender).XpToNextLvl * 0.05);
                     ((Character)sender).MaxHealth += (uint)(((Character)sender).MaxHealth * 0.05);
-                    ((Character)sender).MinDamage += (int)(((Character)sender).MinDamage * 0.05);
-                    ((Character)sender).MaxDamage += (int)(((Character)sender).MaxDamage * 0.05);
+                    ((Character)sender).MinDamage += ((Character)sender).MinDamage * 0.05;
+                    ((Character)sender).MaxDamage += ((Character)sender).MaxDamage * 0.05;
                     if (sender as CharacterWithMagic != null)
                         ((CharacterWithMagic)sender).maxMP += (uint)(((CharacterWithMagic)sender).maxMP * 0.05);
                 }
@@ -89,14 +89,15 @@ namespace RoleGame
         public UInt32 Age { get; private set; }
         public UInt32 CurrentHealth { get; set; }
         public UInt32 MaxHealth { get; private set; }
-        public int MinDamage { get; protected set; }
-        public int MaxDamage { get; protected set; }
+        public double MinDamage { get; protected set; }
+        public double MaxDamage { get; protected set; }
         public int Level { get; protected set; }
         public int XpToNextLvl { get; protected set; }
         public int CurrXp { get; set; }
         public int Shield { get; set; }
         private Random r;
 
+        public Team team;
         /// <summary>
         /// конструктор с пользовательскими параметрами для создания персонажа
         /// </summary>
@@ -115,8 +116,8 @@ namespace RoleGame
             Age = age;
             CurrentHealth = 100;
             MaxHealth = 100;
-            MinDamage = 5;
-            MaxDamage = 10;
+            MinDamage = 10;
+            MaxDamage = 15;
             Level = 1;
             XpToNextLvl = 100;
             CurrXp = 0;
@@ -197,6 +198,8 @@ namespace RoleGame
                 CurrXp = 0;
                 CanSpeak = false;
                 CanMove = false;
+                MinDamage = 10;
+                MaxDamage = 15;
             }
             catch (Exception ex) { Console.WriteLine(ex.Message); }
         }
@@ -234,17 +237,17 @@ namespace RoleGame
             }
             else if (State == CharacterState.Weakened)
             {
-                Console.WriteLine($"You are Weakened, your attack is weakened by 30%");
+                Console.WriteLine($"The {Name} is Weakened, attack is weakened by 30%");
                 character.TakeDamage((UInt32)r.Next((int)(MinDamage * 0.7), (int)(MaxDamage * 0.7 + 1)));
             }
             else if (State == CharacterState.Painful)
             {
-                Console.WriteLine($"You are Painful, your attack is weakened by 50%");
+                Console.WriteLine($"The {Name} Painful, attack is weakened by 50%");
                 character.TakeDamage((UInt32)r.Next((int)(MinDamage * 0.5), (int)(MaxDamage * 0.5 + 1)));
             }
             else if (State == CharacterState.Poisoned)
             {
-                Console.WriteLine($"You are Weakened, your attack is weakened by 40%");
+                Console.WriteLine($"The {Name} Weakened, attack is weakened by 40%");
                 character.TakeDamage((UInt32)r.Next((int)(MinDamage * 0.6), (int)(MaxDamage * 0.6 + 1)));
             }
             else
@@ -256,23 +259,48 @@ namespace RoleGame
                 Console.WriteLine($"The {character.Name} was defeated");
                 if (AddXP != null)
                     AddXP(this, new XpArgs(CurrXp, XpToNextLvl, character.Level * 10));
+                if (team != null)
+                    if (team.Characters.Count > 1)
+                        foreach (Character player in team.Characters)
+                        {
+                            if (player == this)
+                                continue;
+                            AddXP(player, new XpArgs(player.CurrXp, player.XpToNextLvl, character.Level * 10));
+                        }
             }
         }
         public void TakeDamage(UInt32 HP)
         {
-            if (Shield > 0)
-            {
-                Shield--;
-                Console.WriteLine($"The Shield is take damege, current shield count is {Shield}");
-                return;
+            while(HP != 0 && State != CharacterState.Dead) {
+
+                if(Shield > 0)
+                {
+                    if(HP > MaxHealth) 
+                    {
+                        HP -= MaxHealth;
+                        Shield--;
+                    }
+                    else
+                    {
+                        HP = 0;
+                        Shield--;
+                    }
+                }
+                else
+                {
+                    if(HP >= CurrentHealth)
+                    {
+                        Console.WriteLine($"The character {Name} is Died!");
+                        CurrentHealth = 0;
+                        HP = 0;
+                    }
+                    else
+                    {
+                        CurrentHealth -= HP;
+                        HP = 0;
+                    }
+                }
             }
-            if ((int)CurrentHealth - (int)HP <= 0)
-            {
-                Console.WriteLine($"The character {Name} is Died!");
-                CurrentHealth = 0;
-            }
-            else
-                CurrentHealth -= HP;
             if (Health != null)
                 Health(this, new PersonArgs(CurrentHealth, MaxHealth));
         }
@@ -289,13 +317,18 @@ namespace RoleGame
         {
             Character Boss;
             Boss = new Character(name, race, gender, age);
-            Boss.MaxHealth = 400;
-            Boss.MinDamage = 10;
-            Boss.MaxDamage = 30;
+            Boss.MaxHealth = 300;
+            Boss.MinDamage = 30;
+            Boss.MaxDamage = 40;
             Boss.SetLevel(level);
             Boss.CurrentHealth = Boss.MaxHealth;
             return Boss;
 
+        }
+        public void CreateTeam(string name)
+        {
+            team = new Team(name);
+            team.AddCharacter(this);
         }
         public override string ToString() => $"==Character: {Name}==\n" +
             $"Id: {Id},state: {State.ToString()}\n" +

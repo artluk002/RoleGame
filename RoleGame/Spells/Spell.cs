@@ -6,10 +6,18 @@ using System.Threading.Tasks;
 
 namespace RoleGame
 {
+    public enum SpellType
+    {
+        Force,
+        Without,
+        Double,
+    }
+
     public abstract class Spell : IMagic
     {
         public UInt32 MinMPValue;
         public static string Name = "Spell";
+        public SpellType type;
         bool IsVerbalSpell;
         bool IsMotorSpell;
         public CharacterWithMagic characterWithMagic;
@@ -22,6 +30,6 @@ namespace RoleGame
             IsMotorSpell = isMotorSpell;
             this.characterWithMagic = characterWithMagic;
         }
-        
+        public override string ToString() => Name;
     }
 }

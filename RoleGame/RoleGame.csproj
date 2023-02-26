@@ -49,6 +49,7 @@
     <Compile Include="Artifactes\DecoctionOfFrogLegs.cs" />
     <Compile Include="Artifactes\PoisonousSaliva.cs" />
     <Compile Include="Artifactes\VasiliskEye.cs" />
+    <Compile Include="Characters\Team.cs" />
     <Compile Include="Characters\XpArgs.cs" />
     <Compile Include="Spells\AddHealth.cs" />
     <Compile Include="Spells\Antidote.cs" />

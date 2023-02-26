@@ -1,9 +1,20 @@
 ﻿using MyOwnLib;
+using RoleGame.Spells;
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 namespace RoleGame
 {
+    public enum SpellScroll
+    {
+        AddHealth,
+        Antidote,
+        Armor,
+        Cure,
+        Otomri,
+        Revive,
+    }
     public class CharacterWithMagic : Character
     {
         public UInt32 currentMP;
@@ -15,12 +26,14 @@ namespace RoleGame
             currentMP = 150;
             maxMP = 150;
         }
+
         public CharacterWithMagic() : base()
         {
             currentMP = 150;
             maxMP = 150;
             Spells = new Dictionary<string, Spell>();
         }
+
         public void RestoreMP(UInt32 MP)
         {
             if(currentMP + MP > maxMP)
@@ -42,15 +55,124 @@ namespace RoleGame
             else
                 character.Heal(currentMP / 2);
         }
+
+        public void LearnSpell(SpellScroll spell)
+        {
+            Spell addedSpell;
+            switch(spell)
+            {
+                case SpellScroll.AddHealth:
+                    addedSpell = new AddHealth(this);
+                    break;
+                case SpellScroll.Antidote:
+                    addedSpell = new Antidote(this);
+                    break;
+                case SpellScroll.Armor:
+                    addedSpell = new Armor(this);
+                    break;
+                case SpellScroll.Cure:
+                    addedSpell = new Cure(this);
+                    break;
+                case SpellScroll.Otomri:
+                    addedSpell = new Otomri(this);
+                    break;
+                case SpellScroll.Revive:
+                    addedSpell = new Revive(this);
+                    break;
+                default:
+                    addedSpell = null;
+                    break;
+            }
+            if (addedSpell == null)
+                return;
+            if (Spells.ContainsKey(spell.ToString()))
+            {
+                Console.WriteLine($"The {Name} know this spell");
+                return;
+            }
+            Spells.Add(spell.ToString().ToLower(), addedSpell);
+            Console.WriteLine($"The {Name} learned {spell.ToString()} spell");
+        }
+
+        public void ForgetSpell(SpellScroll spell)
+        {
+            Spell addedSpell;
+            switch (spell)
+            {
+                case SpellScroll.AddHealth:
+                    addedSpell = new AddHealth(this);
+                    break;
+                case SpellScroll.Antidote:
+                    addedSpell = new Antidote(this);
+                    break;
+                case SpellScroll.Armor:
+                    addedSpell = new Armor(this);
+                    break;
+                case SpellScroll.Cure:
+                    addedSpell = new Cure(this);
+                    break;
+                case SpellScroll.Otomri:
+                    addedSpell = new Otomri(this);
+                    break;
+                case SpellScroll.Revive:
+                    addedSpell = new Revive(this);
+                    break;
+                default:
+                    addedSpell = null;
+                    break;
+            }
+            if (addedSpell == null)
+                return;
+            if (!Spells.ContainsKey(spell.ToString()))
+                Console.WriteLine($"The {Name} doesn't know this spell");
+            else
+            {
+                Console.WriteLine($"The {Name} forgot {spell.ToString()} spell");
+                Spells.Remove(spell.ToString());
+            }
+        }
+        public void MagicSpell()
+        {
+            Console.WriteLine($"({string.Join(", ", Spells)})");
+            Console.Write("Cast a spell: ");
+            string spell = Console.ReadLine();
+            if (!Spells.ContainsKey(spell.ToLower()))
+            {
+                Console.WriteLine("You doesn't know this spell");
+                return;
+            }
+            switch(Spells[spell.ToLower()].type)
+            {
+                case SpellType.Force:
+                    Console.WriteLine("Enter force of spell: ");
+                    int force = int.Parse(Console.ReadLine());
+                    for(int i = 0; i < team.Characters.Count; i++)
+                        Console.WriteLine($"{i}: {team.Characters[i]}");
+                    Console.WriteLine("Enter id of teammate: ");
+                    int id = int.Parse(Console.ReadLine());
+                    Character character = team.Characters[id];
+                    Spells[spell].Wiz(ref character, force);
+                    break;
+                case SpellType.Without:
+                    break;
+                case SpellType.Double:
+                    break;
+                default:
+                    break;
+            }
+        }
         public override string ToString() => $"==Character: {Name}==\n" +
             $"Id: {Id},state: {State.ToString()}\n" +
             $"race: {Race.ToString()}, gender: {Gender.ToString()}, age: {Age}\n" +
             $"speak: {(CanSpeak == true ? "yes" : "no")}, move: {(CanMove == true ? "yes" : "no")}\n" +
             $"Health: {CurrentHealth}/{MaxHealth}\n" +
             $"Mana {currentMP}/{maxMP}\n" +
-            $"Damage: {MinDamage}/{MaxDamage}" +
+            $"Damage: {MinDamage}/{MaxDamage}\n" +
             $"Level: {Level}\n" +
             $"XP - {CurrXp}/{XpToNextLvl}\n" +
+            $"Spells: ({string.Join(", ", Spells.Values)})\n" +
             $"============={Functions.Fill("=", Name.Length)}==";
+
+
     }
 }
