@@ -9,6 +9,9 @@ namespace RoleGame
         public DeadWaterBottle(BottleSize size, Character character) : base(0, false, character)
         {
             this.Size = size;
+            Description = " - Restores the mana of a character who owns magic,\n" +
+                "but is useless for a normal character, and the larger the bottle,\n " +
+                "the more it will restore, non-renewable.";
         }
         public override void Wiz(ref Character character, int force = 10)
         {
@@ -23,5 +26,6 @@ namespace RoleGame
                 Console.WriteLine($"Mana of {character.Name} has been increased to {(character as CharacterWithMagic).currentMP}");
             }
         }
+        public override string ToString() => $"{Name}, {Size}, {Description}";
     }
 }

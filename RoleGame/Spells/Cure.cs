@@ -11,6 +11,7 @@ namespace RoleGame
         public static string Name = "Cure";
         public Cure(CharacterWithMagic characterWithMagic) : base(20, false, false, characterWithMagic)
         {
+            type = SpellType.Without;
         }
         public override void Wiz(ref Character character, int force = 10)
         {

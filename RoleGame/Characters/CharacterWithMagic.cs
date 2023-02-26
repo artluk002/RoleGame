@@ -123,7 +123,7 @@ namespace RoleGame
             }
             if (addedSpell == null)
                 return;
-            if (!Spells.ContainsKey(spell.ToString()))
+            if (!Spells.ContainsKey(spell.ToString().ToLower()))
                 Console.WriteLine($"The {Name} doesn't know this spell");
             else
             {
@@ -133,7 +133,7 @@ namespace RoleGame
         }
         public void MagicSpell()
         {
-            Console.WriteLine($"({string.Join(", ", Spells)})");
+            Console.WriteLine($"({string.Join(", ", Spells.Keys)})");
             Console.Write("Cast a spell: ");
             string spell = Console.ReadLine();
             if (!Spells.ContainsKey(spell.ToLower()))
@@ -151,11 +151,42 @@ namespace RoleGame
                     Console.WriteLine("Enter id of teammate: ");
                     int id = int.Parse(Console.ReadLine());
                     Character character = team.Characters[id];
-                    Spells[spell].Wiz(ref character, force);
+                    Spells[spell.ToLower()].Wiz(ref character, force);
                     break;
                 case SpellType.Without:
+                    for (int i = 0; i < team.Characters.Count; i++)
+                        Console.WriteLine($"{i}: {team.Characters[i]}");
+                    Console.WriteLine("Enter id of teammate: ");
+                    id = int.Parse(Console.ReadLine());
+                    character = team.Characters[id];
+                    Spells[spell.ToLower()].Wiz(ref character);
                     break;
                 case SpellType.Double:
+                    Console.WriteLine("Would you like to use this spell with or without power?");
+                    Console.Write("Enter with or without: ");
+                    string choose = Console.ReadLine().ToLower();
+                    switch(choose)
+                    {
+                        case "with":
+                            Console.WriteLine("Enter force of spell: ");
+                            force = int.Parse(Console.ReadLine());
+                            for (int i = 0; i < team.Characters.Count; i++)
+                                Console.WriteLine($"{i}: {team.Characters[i]}");
+                            Console.WriteLine("Enter id of teammate: ");
+                            id = int.Parse(Console.ReadLine());
+                            character = team.Characters[id];
+                            Spells[spell.ToLower()].Wiz(ref character, force);
+                            break;
+                        case "without":
+                        default:
+                            for (int i = 0; i < team.Characters.Count; i++)
+                                Console.WriteLine($"{i}: {team.Characters[i]}");
+                            Console.WriteLine("Enter id of teammate: ");
+                            id = int.Parse(Console.ReadLine());
+                            character = team.Characters[id];
+                            Spells[spell.ToLower()].Wiz(ref character);
+                            break;
+                    }
                     break;
                 default:
                     break;
@@ -169,10 +200,9 @@ namespace RoleGame
             $"Mana {currentMP}/{maxMP}\n" +
             $"Damage: {MinDamage}/{MaxDamage}\n" +
             $"Level: {Level}\n" +
-            $"XP - {CurrXp}/{XpToNextLvl}\n" +
+            $"XP: {CurrXp}/{XpToNextLvl}\n" +
+            $"Shields: {Shield}" +
             $"Spells: ({string.Join(", ", Spells.Values)})\n" +
             $"============={Functions.Fill("=", Name.Length)}==";
-
-
     }
 }

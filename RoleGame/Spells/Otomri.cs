@@ -11,7 +11,7 @@ namespace RoleGame.Spells
         public static string Name = "Otomri";
         public Otomri(CharacterWithMagic characterWithMagic) : base(85, false, false, characterWithMagic)
         {
-            type = SpellType.Force;
+             type = SpellType.Without;
         }
         public override void Wiz(ref Character character, int force = 10)
         {

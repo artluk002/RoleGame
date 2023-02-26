@@ -9,9 +9,10 @@ namespace RoleGame
 {
     public class Revive : Spell
     {
-        public static string Name = "Revive";
+        public static string Name = "Revive"; 
         public Revive(CharacterWithMagic characterWithMagic) : base(150, false, false, characterWithMagic)
         {
+            type = SpellType.Without;
         }
         public override void Wiz(ref Character character, int force = 10)
         {

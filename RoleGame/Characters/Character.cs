@@ -335,9 +335,10 @@ namespace RoleGame
             $"race: {Race.ToString()}, gender: {Gender.ToString()}, age: {Age}\n" +
             $"speak: {(CanSpeak == true ? "yes" : "no")}, move: {(CanMove == true ? "yes" : "no")}\n" +
             $"Health: {CurrentHealth}/{MaxHealth}\n" +
-            $"Damage: {MinDamage} - {MaxDamage}\n" +
+            $"Damage: {MinDamage}/{MaxDamage}\n" +
             $"Level: {Level}\n" +
             $"XP: {CurrXp}/{XpToNextLvl}\n" +
+            $"Shields: {Shield}\n" +
             $"============={Functions.Fill("=", Name.Length)}==";
     }
 }

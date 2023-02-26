@@ -16,11 +16,11 @@ namespace RoleGame.Characters
             Name = name;
         }
         public Team() { }
-        public void AddCharacter(ref Character character)
+        public void AddCharacter(Character character)
         {
             Characters.Add(character);
         }
-        public void RemoveCharacter(ref Character character)
+        public void RemoveCharacter(Character character)
         {
             Characters.Remove(character);
         }

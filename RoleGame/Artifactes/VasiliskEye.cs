@@ -9,7 +9,10 @@ namespace RoleGame.Artifactes
     public class VasiliskEye : Artifact
     {
         public static string Name = "PoisonousSaliva";
-        public VasiliskEye(Character character) : base(0, false, character) { }
+        public VasiliskEye(Character character) : base(0, false, character)
+        {
+            Description = " - Paralyzes the enemy, non-renewable.";
+        }
         public override void Wiz(ref Character character, int force = 10)
         {
             Console.WriteLine("This artifact uses without force");
@@ -32,6 +35,7 @@ namespace RoleGame.Artifactes
                 }
             }
         }
+        public override string ToString() => $"{Name}, {Description}";
     }
 
 }

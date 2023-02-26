@@ -16,7 +16,9 @@ namespace RoleGame
 
         public LivingWaterBottle(BottleSize size, Character character) : base(0, false, character) 
         {
-            this.Size = Size;
+            this.Size = size;
+            Description = " - Restores character's health, can be used on yourself or \n " +
+                "on teammates, and the larger the bottle, the more restores, non-renewable.";
         }
         public override void Wiz(ref Character character, int force = 10)
         {
@@ -27,5 +29,6 @@ namespace RoleGame
         {
             character.Heal((UInt32)Size);
         }
+        public override string ToString() => $"{Name}, {Size}, {Description}";
     }
 }

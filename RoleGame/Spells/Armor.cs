@@ -12,7 +12,7 @@ namespace RoleGame
         public static string Name = "Armor";
         public Armor(CharacterWithMagic characterWithMagic) : base(50, false, false, characterWithMagic)
         {
-            type = SpellType.Force;
+            type = SpellType.Double;
         }
         public override void Wiz(ref Character character, int force = 10)
         {
