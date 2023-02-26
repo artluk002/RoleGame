@@ -9,7 +9,7 @@ namespace RoleGame.Characters
 {
     public class Inventory
     {
-        public Dictionary<string,Artifact> Items;
+        public Dictionary<string, Artifact> Items;
 
         public Inventory()
         {
@@ -18,19 +18,25 @@ namespace RoleGame.Characters
 
         public void AddItem(Artifact item)
         {
-            if (Items.ContainsKey())
-                return;
+            if (Items.ContainsKey(item.GetName()))
+                Items[item.GetName()].Count++;
+            else
+                Items.Add(item.GetName(), item);
         }
         public void RemoveItem(Artifact item)
         {
-            if (Items[Items.IndexOf(item)].Count > 1)
-                Items[Items.IndexOf(item)].Count--;
-            else
-                Items.Remove(item);
+            if (Items.ContainsKey(item.GetName()))
+            {
+                if (Items[item.GetName()].Count > 1)
+                    Items[item.GetName()].Count--;
+                else
+                    Items.Remove(item.GetName());
+            }
+
         }
         public void PrintItems()
         {
-            Console.WriteLine(string.Join("\n", Items));
+            Console.WriteLine(string.Join("\n", Items.Keys));
         }
 
     }

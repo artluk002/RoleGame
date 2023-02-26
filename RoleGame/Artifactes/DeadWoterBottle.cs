@@ -4,19 +4,18 @@ namespace RoleGame
     public class DeadWaterBottle : Artifact
     {
         public static string Name = "DeadWaterBottle";
-        public BottleSize Size { get; set; } 
-
+        public BottleSize Size { get; set; }
+        public override string GetName() => Size + Name;
         public DeadWaterBottle(BottleSize size, Character character) : base(0, false, character)
         {
             this.Size = size;
-            Description = " - Restores the mana of a character who owns magic,\n" +
+            Description = "- Restores the mana of a character who owns magic,\n" +
                 "but is useless for a normal character, and the larger the bottle,\n " +
                 "the more it will restore, non-renewable.";
         }
         public override void Wiz(ref Character character, int force = 10)
         {
-            Console.WriteLine("This artifact can't be used with force!");
-            return;
+            Wiz(ref character);
         }
         public override void Wiz(ref Character character)
         {
@@ -26,6 +25,6 @@ namespace RoleGame
                 Console.WriteLine($"Mana of {character.Name} has been increased to {(character as CharacterWithMagic).currentMP}");
             }
         }
-        public override string ToString() => $"{Name}, {Size}, {Description}";
+        public override string ToString() => $"- {Count}.\n{Name}, {Size}, {Description}";
     }
 }

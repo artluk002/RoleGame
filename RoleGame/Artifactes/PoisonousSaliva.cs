@@ -9,9 +9,10 @@ namespace RoleGame.Artifactes
     public class PoisonousSaliva : Artifact
     {
         public static string Name = "PoisonousSaliva";
+        public override string GetName() => Name;
         public PoisonousSaliva(Character character) : base(20, true, character)
         {
-            Description = " - Poisons and damages the character";
+            Description = "- Poisons and damages the character";
         }
         public override void Wiz(ref Character character, int force = 10)
         {
@@ -32,10 +33,9 @@ namespace RoleGame.Artifactes
         }
         public override void Wiz(ref Character character)
         {
-            Console.WriteLine("This artifact can't be used without force");
-            return;
+            Wiz(ref character, 10);
         }
-        public override string ToString() => $"{Name}, {Description}";
+        public override string ToString() => $"- {Count}.\n{Name}, {Description}";
     }
 
 }

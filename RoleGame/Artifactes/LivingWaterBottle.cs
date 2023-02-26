@@ -13,22 +13,22 @@ namespace RoleGame
     {
         public static string Name = "LivingWaterBottle";
         public BottleSize Size { get; set; }
+        public override string GetName() => Size + Name;
 
         public LivingWaterBottle(BottleSize size, Character character) : base(0, false, character) 
         {
             this.Size = size;
-            Description = " - Restores character's health, can be used on yourself or \n " +
+            Description = "- Restores character's health, can be used on yourself or \n " +
                 "on teammates, and the larger the bottle, the more restores, non-renewable.";
         }
         public override void Wiz(ref Character character, int force = 10)
         {
-            Console.WriteLine("This artifact can't be used with force!");
-            return;
+            Wiz(ref character);
         }
         public override void Wiz(ref Character character)
         {
             character.Heal((UInt32)Size);
         }
-        public override string ToString() => $"{Name}, {Size}, {Description}";
+        public override string ToString() => $"- {Count}.\n{Name}, {Size}, {Description}";
     }
 }

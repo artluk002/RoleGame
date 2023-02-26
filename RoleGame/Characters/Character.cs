@@ -95,9 +95,10 @@ namespace RoleGame
         public int XpToNextLvl { get; protected set; }
         public int CurrXp { get; set; }
         public int Shield { get; set; }
-        private Random r;
-
+        public Inventory Inventory;
         public Team team;
+        private Random r;
+        
         /// <summary>
         /// конструктор с пользовательскими параметрами для создания персонажа
         /// </summary>
@@ -330,6 +331,7 @@ namespace RoleGame
             team = new Team(name);
             team.AddCharacter(this);
         }
+        public void 
         public override string ToString() => $"==Character: {Name}==\n" +
             $"Id: {Id},state: {State.ToString()}\n" +
             $"race: {Race.ToString()}, gender: {Gender.ToString()}, age: {Age}\n" +

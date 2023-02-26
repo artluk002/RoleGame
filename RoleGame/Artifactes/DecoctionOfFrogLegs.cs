@@ -9,15 +9,15 @@ namespace RoleGame.Artifactes
     public class DecoctionOfFrogLegs : Artifact
     {
         public static string Name = "DecoctionOfFrogLegs";
+        public override string GetName() => Name;
         public DecoctionOfFrogLegs(Character character) : base(0, false, character)
         {
-            Description = " - Stops the effect of the poison. Can be\n " +
+            Description = "- Stops the effect of the poison. Can be\n " +
                 "used on yourself or teammates, non-renewable.";
         }
         public override void Wiz(ref Character character, int force = 10)
         {
-            Console.WriteLine("This artifact can't be used with force");
-            return;
+            Wiz(ref character);
         }
         public override void Wiz(ref Character character)
         {
@@ -36,6 +36,6 @@ namespace RoleGame.Artifactes
             }
             
         }
-        public override string ToString() => $"{Name}, {Description}";
+        public override string ToString() => $"- {Count}.\n{Name}, {Description}";
     }
 }
