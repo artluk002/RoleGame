@@ -6,12 +6,13 @@ namespace RoleGame
         public static string Name = "DeadWaterBottle";
         public BottleSize Size { get; set; }
         public override string GetName() => Size + Name;
-        public DeadWaterBottle(BottleSize size, Character character) : base(0, false, character)
+        public DeadWaterBottle(BottleSize size) : base(0, false)
         {
             this.Size = size;
             Description = "- Restores the mana of a character who owns magic,\n" +
                 "but is useless for a normal character, and the larger the bottle,\n " +
                 "the more it will restore, non-renewable.";
+            type = SpellType.Without;
         }
         public override void Wiz(ref Character character, int force = 10)
         {

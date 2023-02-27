@@ -10,9 +10,10 @@ namespace RoleGame.Artifactes
     {
         public static string Name = "PoisonousSaliva";
         public override string GetName() => Name;
-        public PoisonousSaliva(Character character) : base(20, true, character)
+        public PoisonousSaliva() : base(20, true)
         {
             Description = "- Poisons and damages the character";
+            type = SpellType.Force;
         }
         public override void Wiz(ref Character character, int force = 10)
         {

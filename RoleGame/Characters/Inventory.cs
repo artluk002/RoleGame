@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace RoleGame.Characters
 {
+
     public class Inventory
     {
         public Dictionary<string, Artifact> Items;
@@ -15,7 +16,7 @@ namespace RoleGame.Characters
         {
             Items = new Dictionary<string, Artifact>();
         }
-
+        
         public void AddItem(Artifact item)
         {
             if (Items.ContainsKey(item.GetName()))
@@ -34,9 +35,11 @@ namespace RoleGame.Characters
             }
 
         }
+        public bool IsItIn(string name) => Items.ContainsKey(name);
         public void PrintItems()
         {
-            Console.WriteLine(string.Join("\n", Items.Keys));
+            foreach (var item in Items)
+                Console.WriteLine($"{item.Key} - {item.Value.Count}");
         }
 
     }

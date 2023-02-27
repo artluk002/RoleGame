@@ -1,5 +1,6 @@
 ﻿using RoleGame.Artifactes;
 using RoleGame.Characters;
+using RoleGame.Plot;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,13 +10,16 @@ using System.Threading.Tasks;
 
 namespace RoleGame
 {
-    internal class Program
+    public delegate void InventoryHandler(object sender, InventoryArgs e);
+    public class Program
     {
         static void Main(string[] args)
         {
             Character character1 = new Character("Andrew", CharacterRace.Goblin, CharacterGender.Male, 18);
-            /*CharacterWithMagic character2 = new CharacterWithMagic("Vladislave", CharacterRace.Orc, CharacterGender.Male, 20);
-            Character character = Character.SummonBoss(110, "Andrew", CharacterGender.Male, CharacterRace.Orc, 400);
+            CharacterWithMagic character2 = new CharacterWithMagic("Vladislave", CharacterRace.Orc, CharacterGender.Male, 20);
+            character1.CreateTeam("BUFA");
+            character1.team.AddCharacter(character2);
+            /*Character character = Character.SummonBoss(110, "Andrew", CharacterGender.Male, CharacterRace.Orc, 400);
             character2.SetLevel(110);
             character2.CreateTeam("AAA");
             character2.team.AddCharacter(character1);
@@ -37,20 +41,31 @@ namespace RoleGame
             Console.WriteLine(character2);
             Console.WriteLine(character1);
             Console.WriteLine(count);*/
-            Inventory inventory = new Inventory();
-            inventory.AddItem(new DeadWaterBottle(BottleSize.High, character1));
-            inventory.AddItem(new LivingWaterBottle(BottleSize.Low, character1));
-            inventory.AddItem(new LivingWaterBottle(BottleSize.Medium, character1));
-            inventory.AddItem(new LivingWaterBottle(BottleSize.High, character1));
-            inventory.AddItem(new LivingWaterBottle(BottleSize.High, character1));
-            inventory.AddItem(new DeadWaterBottle(BottleSize.Medium, character1));
-            inventory.AddItem(new DeadWaterBottle(BottleSize.Low, character1));
-            inventory.AddItem(new DeadWaterBottle(BottleSize.High, character1));
-            inventory.AddItem(new PoisonousSaliva(character1));
-            inventory.AddItem(new DeadWaterBottle(BottleSize.Medium, character1));
-            inventory.AddItem(new Staff(ref character1));
-            inventory.AddItem(new Staff(ref character1));
-            inventory.PrintItems();
+
+            /*character1.Inventory.AddItem(new DeadWaterBottle(BottleSize.High));
+            character1.Inventory.AddItem(new LivingWaterBottle(BottleSize.Low));
+            character1.Inventory.AddItem(new LivingWaterBottle(BottleSize.Medium));
+            character1.Inventory.AddItem(new LivingWaterBottle(BottleSize.High));
+            character1.Inventory.AddItem(new LivingWaterBottle(BottleSize.High));
+            character1.Inventory.AddItem(new DeadWaterBottle(BottleSize.Medium));
+            character1.Inventory.AddItem(new DeadWaterBottle(BottleSize.Low));
+            character1.Inventory.AddItem(new DeadWaterBottle(BottleSize.High));
+            character1.Inventory.AddItem(new PoisonousSaliva());
+            character1.Inventory.AddItem(new DeadWaterBottle(BottleSize.Medium));
+            character1.Inventory.AddItem(new Staff());
+            character1.Inventory.AddItem(new Staff());
+            character1.Inventory.PrintItems();
+            character1.PassItem();
+            Console.WriteLine("===============");
+            character2.Inventory.PrintItems();
+            Console.WriteLine("===============");
+            character1.Inventory.PrintItems();
+            Console.WriteLine("===============");*/
+
+            Game g = new Game();
+            g.Precondition();
+            g.Save();
+            g.BossBattle();
             Console.ReadKey();
             
         }

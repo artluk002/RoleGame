@@ -6,10 +6,11 @@ namespace RoleGame
     {
 
         public static string Name = "Staff";
-        public Staff(ref Character character) : base(100, true, character)// допилить восстановление мощьности
+        public Staff() : base(100, true)// допилить восстановление мощьности
         {
             Description = "- Deals damage to the enemy. Can be used until its\n " +
                 "power runs out, at which point it becomes unusable.";
+            type = SpellType.Force;
         }
         public override string GetName() => Name;
         public override void Wiz(ref Character character, int force = 10)

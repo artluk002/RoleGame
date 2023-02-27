@@ -201,7 +201,7 @@ namespace RoleGame
             $"Damage: {MinDamage}/{MaxDamage}\n" +
             $"Level: {Level}\n" +
             $"XP: {CurrXp}/{XpToNextLvl}\n" +
-            $"Shields: {Shield}" +
+            $"Shields: {Shield}\n" +
             $"Spells: ({string.Join(", ", Spells.Values)})\n" +
             $"============={Functions.Fill("=", Name.Length)}==";
     }

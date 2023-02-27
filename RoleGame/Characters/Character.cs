@@ -38,10 +38,12 @@ namespace RoleGame
     {
         Male,
         Female,
+        Non,
     }
     /// <summary>
     /// класс Персонаж
     /// </summary>
+    [Serializable]
     public class Character : IComparable<Character>
     {
         public event HealthHandler Health = (sender, e) =>
@@ -79,7 +81,7 @@ namespace RoleGame
                 ((Character)sender).CurrXp += e.AddedXp;
             }
         };
-        public UInt32 Id { get; private set; }
+        public Int32 Id { get; private set; }
         public String Name { get; private set; }
         public CharacterState State { get; set; }
         public bool CanSpeak { get; set; }
@@ -95,8 +97,8 @@ namespace RoleGame
         public int XpToNextLvl { get; protected set; }
         public int CurrXp { get; set; }
         public int Shield { get; set; }
-        public Inventory Inventory;
-        public Team team;
+        public Inventory Inventory { get; set; }
+        public Team team { get; set; }
         private Random r;
         
         /// <summary>
@@ -109,7 +111,7 @@ namespace RoleGame
         public Character(String name, CharacterRace race, CharacterGender gender, UInt32 age)
         {
             r = new Random();
-            Id = (UInt32)(name.GetHashCode() / r.Next());
+            Id = (Int32)(name.GetHashCode() / r.Next());
             Name = name;
             State = CharacterState.Normal;
             Race = race;
@@ -124,6 +126,7 @@ namespace RoleGame
             CurrXp = 0;
             CanSpeak = false;
             CanMove = false;
+            Inventory= new Inventory();
         }
         /// <summary>
         /// конструктор без параметров для создания персонажа
@@ -135,7 +138,7 @@ namespace RoleGame
             {
                 Console.Write("Enter character Name: ");
                 Name = Console.ReadLine();
-                Id = (UInt32)(Name.GetHashCode() / r.Next());
+                Id = (Int32)(Name.GetHashCode() * r.Next());
                 bool validDate = false;
                 State = CharacterState.Normal;
                 do
@@ -150,7 +153,7 @@ namespace RoleGame
                             break;
                         case "gnome":
                             Race = CharacterRace.Gnome;
-                            validDate = false;
+                            validDate = true;
                             break;
                         case "elf":
                             Race = CharacterRace.Elf;
@@ -158,7 +161,7 @@ namespace RoleGame
                             break;
                         case "orc":
                             Race = CharacterRace.Orc;
-                            validDate = false;
+                            validDate = true;
                             break;
                         case "goblin":
                             Race = CharacterRace.Goblin;
@@ -191,7 +194,7 @@ namespace RoleGame
                 } while (!validDate);
                 validDate = false;
                 Console.Write("Enter character age: ");
-                UInt32 age = UInt32.Parse(Console.ReadLine());
+                Age = UInt32.Parse(Console.ReadLine());
                 CurrentHealth = 100;
                 MaxHealth = 100;
                 Level = 1;
@@ -201,6 +204,7 @@ namespace RoleGame
                 CanMove = false;
                 MinDamage = 10;
                 MaxDamage = 15;
+                Inventory = new Inventory();
             }
             catch (Exception ex) { Console.WriteLine(ex.Message); }
         }
@@ -238,17 +242,22 @@ namespace RoleGame
             }
             else if (State == CharacterState.Weakened)
             {
+                Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine($"The {Name} is Weakened, attack is weakened by 30%");
+                Console.ForegroundColor = ConsoleColor.White;
                 character.TakeDamage((UInt32)r.Next((int)(MinDamage * 0.7), (int)(MaxDamage * 0.7 + 1)));
             }
             else if (State == CharacterState.Painful)
             {
+                Console.ForegroundColor = ConsoleColor.Cyan;
                 Console.WriteLine($"The {Name} Painful, attack is weakened by 50%");
                 character.TakeDamage((UInt32)r.Next((int)(MinDamage * 0.5), (int)(MaxDamage * 0.5 + 1)));
             }
             else if (State == CharacterState.Poisoned)
             {
+                Console.ForegroundColor = ConsoleColor.Magenta;
                 Console.WriteLine($"The {Name} Weakened, attack is weakened by 40%");
+                Console.ForegroundColor = ConsoleColor.White;
                 character.TakeDamage((UInt32)r.Next((int)(MinDamage * 0.6), (int)(MaxDamage * 0.6 + 1)));
             }
             else
@@ -331,7 +340,32 @@ namespace RoleGame
             team = new Team(name);
             team.AddCharacter(this);
         }
-        public void 
+        public void PassItem()
+        {
+            int i = 0;
+            foreach(var item in Inventory.Items)
+                Console.WriteLine($"{item.Key} - {item.Value.Count}");
+            Console.Write("Enter name of item you want to pass: ");
+            string ItemName = Console.ReadLine();
+            if (!Inventory.Items.ContainsKey(ItemName))
+            {
+                Console.WriteLine("Item with such name isn't exist in your inventory!");
+                return;
+            }
+            else
+            {
+                do
+                {
+                    for (int j = 0; j < team.Characters.Count; j++)
+                        Console.WriteLine($"{j}: {team.Characters[j]}");
+
+                    Console.Write("Enter number of your teammate: ");
+                    i = int.Parse(Console.ReadLine());
+                } while (i > team.Characters.Count | i < 1);
+                team.Characters[i].Inventory.AddItem(Inventory.Items[ItemName]);
+                Inventory.RemoveItem(Inventory.Items[ItemName]);
+            }
+        }
         public override string ToString() => $"==Character: {Name}==\n" +
             $"Id: {Id},state: {State.ToString()}\n" +
             $"race: {Race.ToString()}, gender: {Gender.ToString()}, age: {Age}\n" +

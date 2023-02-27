@@ -10,10 +10,11 @@ namespace RoleGame.Artifactes
     {
         public static string Name = "DecoctionOfFrogLegs";
         public override string GetName() => Name;
-        public DecoctionOfFrogLegs(Character character) : base(0, false, character)
+        public DecoctionOfFrogLegs() : base(0, false)
         {
             Description = "- Stops the effect of the poison. Can be\n " +
                 "used on yourself or teammates, non-renewable.";
+            type = SpellType.Without;
         }
         public override void Wiz(ref Character character, int force = 10)
         {
