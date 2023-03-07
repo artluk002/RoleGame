@@ -23,7 +23,7 @@ namespace RoleGame
             if(character as CharacterWithMagic != null)
             {
                 (character as CharacterWithMagic).RestoreMP((UInt32)Size);
-                Console.WriteLine($"Mana of {character.Name} has been increased to {(character as CharacterWithMagic).currentMP}");
+                Console.WriteLine($"Mana of {character.Name} has been increased to {(character as CharacterWithMagic).CurrentMP}");
             }
         }
         public override string ToString() => $"- {Count}.\n{Name}, {Size}, {Description}";

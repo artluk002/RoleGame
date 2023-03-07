@@ -19,7 +19,7 @@ namespace RoleGame.Artifactes
         {
             if (character.State == CharacterState.Dead)
             {
-                Console.WriteLine("This artifact can't be used because the enemy is dead"); //Console.WriteLine($"The {character.Name} can't be poisoned because he is dead!");
+                Console.WriteLine("This artifact can't be used because the enemy is dead"); 
                 return;
             }
             else

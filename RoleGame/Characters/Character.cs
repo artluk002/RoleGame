@@ -1,10 +1,13 @@
 ﻿using MyOwnLib;
+using Newtonsoft.Json;
+using NJsonSchema.Converters;
 using RoleGame.Characters;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+
 using System.Threading.Tasks;
 
 namespace RoleGame
@@ -43,16 +46,20 @@ namespace RoleGame
     /// <summary>
     /// класс Персонаж
     /// </summary>
-    [Serializable]
+    [JsonConverter(typeof(JsonInheritanceConverter), "type")]
     public class Character : IComparable<Character>
     {
         public event HealthHandler Health = (sender, e) =>
         {
             double HealthPercent = ((double)e.Health / (double)e.MaxHealth) * 100;
-            if (HealthPercent >= 10)
-                (sender as Character).State = CharacterState.Normal;
-            else if (HealthPercent < 10 & HealthPercent > 0)
-                (sender as Character).State = CharacterState.Weakened;
+            if (HealthPercent >= 10) {
+                if ((sender as Character).State != CharacterState.Poisoned | (sender as Character).State != CharacterState.Painful | (sender as Character).State != CharacterState.Paralyzed)
+                    (sender as Character).State = CharacterState.Normal;
+            }
+            else if (HealthPercent < 10 & HealthPercent > 0) {
+                if ((sender as Character).State != CharacterState.Poisoned | (sender as Character).State != CharacterState.Painful | (sender as Character).State != CharacterState.Paralyzed)
+                    (sender as Character).State = CharacterState.Weakened;
+            }
             else if (HealthPercent <= 0)
                 (sender as Character).State = CharacterState.Dead;
         };
@@ -71,7 +78,7 @@ namespace RoleGame
                     ((Character)sender).MinDamage += ((Character)sender).MinDamage * 0.05;
                     ((Character)sender).MaxDamage += ((Character)sender).MaxDamage * 0.05;
                     if (sender as CharacterWithMagic != null)
-                        ((CharacterWithMagic)sender).maxMP += (uint)(((CharacterWithMagic)sender).maxMP * 0.05);
+                        ((CharacterWithMagic)sender).MaxMP += (uint)(((CharacterWithMagic)sender).MaxMP * 0.05);
                 }
                 ((Character)sender).CurrXp = buf;
                 //Console.WriteLine($"The {((Character)sender).Name} has {((Character)sender).Level} level");
@@ -81,26 +88,29 @@ namespace RoleGame
                 ((Character)sender).CurrXp += e.AddedXp;
             }
         };
-        public Int32 Id { get; private set; }
-        public String Name { get; private set; }
+        public Int32 Id { get; set; }
+        public String Name { get; set; }
         public CharacterState State { get; set; }
         public bool CanSpeak { get; set; }
         public bool CanMove { get; set; }
-        public CharacterRace Race { get; private set; }
-        public CharacterGender Gender { get; private set; }
-        public UInt32 Age { get; private set; }
+        public CharacterRace Race { get; set; }
+        public CharacterGender Gender { get; set; }
+        public UInt32 Age { get; set; }
         public UInt32 CurrentHealth { get; set; }
-        public UInt32 MaxHealth { get; private set; }
-        public double MinDamage { get; protected set; }
-        public double MaxDamage { get; protected set; }
-        public int Level { get; protected set; }
-        public int XpToNextLvl { get; protected set; }
+        public UInt32 MaxHealth { get; set; }
+        public double MinDamage { get; set; }
+        public double MaxDamage { get; set; }
+        public int Level { get; set; }
+        public int XpToNextLvl { get; set; }
         public int CurrXp { get; set; }
         public int Shield { get; set; }
         public Inventory Inventory { get; set; }
+        [JsonIgnore]
         public Team team { get; set; }
+        [JsonIgnore]
+        public int ParalazedCount { get; set; }
         private Random r;
-        
+
         /// <summary>
         /// конструктор с пользовательскими параметрами для создания персонажа
         /// </summary>
@@ -126,12 +136,33 @@ namespace RoleGame
             CurrXp = 0;
             CanSpeak = false;
             CanMove = false;
-            Inventory= new Inventory();
+            Inventory = new Inventory();
+        }
+        public Character(Character clone)
+        {
+            Id = clone.Id;
+            Name = clone.Name;
+            State = clone.State;
+            Race = clone.Race;
+            Gender = clone.Gender;
+            Age = clone.Age;
+            CurrentHealth = clone.CurrentHealth;
+            MaxHealth = clone.MaxHealth;
+            MinDamage = clone.MinDamage;
+            MaxDamage = clone.MaxDamage;
+            Level = clone.Level;
+            XpToNextLvl = clone.XpToNextLvl;
+            CurrXp = clone.CurrXp;
+            CanSpeak = clone.CanSpeak;
+            CanMove = clone.CanMove;
+            Inventory = clone.Inventory;
+            r = new Random();
         }
         /// <summary>
         /// конструктор без параметров для создания персонажа
         /// </summary>
-        public Character()
+        public Character() { }
+        public Character(bool i)
         {
             r = new Random();
             try
@@ -235,6 +266,8 @@ namespace RoleGame
         }
         public void Attak(ref Character character)
         {
+            if (r == null)
+                r = new Random();
             if (State == CharacterState.Paralyzed)
             {
                 Console.WriteLine($"You are paralyzed, you can't attak");
@@ -281,11 +314,12 @@ namespace RoleGame
         }
         public void TakeDamage(UInt32 HP)
         {
-            while(HP != 0 && State != CharacterState.Dead) {
+            while (HP != 0 && State != CharacterState.Dead)
+            {
 
-                if(Shield > 0)
+                if (Shield > 0)
                 {
-                    if(HP > MaxHealth) 
+                    if (HP > MaxHealth)
                     {
                         HP -= MaxHealth;
                         Shield--;
@@ -298,7 +332,7 @@ namespace RoleGame
                 }
                 else
                 {
-                    if(HP >= CurrentHealth)
+                    if (HP >= CurrentHealth)
                     {
                         Console.WriteLine($"The character {Name} is Died!");
                         CurrentHealth = 0;
@@ -343,7 +377,7 @@ namespace RoleGame
         public void PassItem()
         {
             int i = 0;
-            foreach(var item in Inventory.Items)
+            foreach (var item in Inventory.Items)
                 Console.WriteLine($"{item.Key} - {item.Value.Count}");
             Console.Write("Enter name of item you want to pass: ");
             string ItemName = Console.ReadLine();

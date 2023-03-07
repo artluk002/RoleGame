@@ -11,8 +11,8 @@ namespace RoleGame
         public override void Wiz(ref Character character, int force = 10)
         {
             int crrForce = force >= 100 ? 100 : force;
-            UInt32 MpForSpell = (UInt32)(characterWithMagic.currentMP * crrForce / 100);
-            characterWithMagic.currentMP -= MpForSpell;
+            UInt32 MpForSpell = (UInt32)(characterWithMagic.CurrentMP * crrForce / 100);
+            characterWithMagic.CurrentMP -= MpForSpell;
             character.Heal(MpForSpell / 2);
         }
         public override void Wiz(ref Character character)

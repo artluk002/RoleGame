@@ -15,10 +15,10 @@ namespace RoleGame
     {
         static void Main(string[] args)
         {
-            Character character1 = new Character("Andrew", CharacterRace.Goblin, CharacterGender.Male, 18);
+            /*Character character1 = new Character("Andrew", CharacterRace.Goblin, CharacterGender.Male, 18);
             CharacterWithMagic character2 = new CharacterWithMagic("Vladislave", CharacterRace.Orc, CharacterGender.Male, 20);
             character1.CreateTeam("BUFA");
-            character1.team.AddCharacter(character2);
+            character1.team.AddCharacter(character2);*/
             /*Character character = Character.SummonBoss(110, "Andrew", CharacterGender.Male, CharacterRace.Orc, 400);
             character2.SetLevel(110);
             character2.CreateTeam("AAA");
@@ -61,13 +61,22 @@ namespace RoleGame
             Console.WriteLine("===============");
             character1.Inventory.PrintItems();
             Console.WriteLine("===============");*/
+            /*Character an = new Character(true);
+            JsonOperations json = new JsonOperations();
+            json.SaveCharacters(an);
+            List<Character> a = json.ReadCharacters();
+            foreach (Character c in a)
+            {
+                if(c as CharacterWithMagic != null)
+                    Console.WriteLine(true);
+                else
+                    Console.WriteLine(false);
 
+            }*/
             Game g = new Game();
             g.Precondition();
-            g.Save();
             g.BossBattle();
             Console.ReadKey();
-            
         }
     }
 }

@@ -33,7 +33,7 @@ namespace RoleGame.Spells
                 Console.WriteLine($"The {character.Name} is {character.State.ToString()}");
                 character.CurrentHealth = 1;
             }
-            characterWithMagic.currentMP -= MinMPValue;
+            characterWithMagic.CurrentMP -= MinMPValue;
         }
         public override string ToString() => Name;
     }

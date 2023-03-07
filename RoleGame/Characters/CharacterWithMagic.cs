@@ -1,4 +1,5 @@
 ﻿using MyOwnLib;
+using Newtonsoft.Json;
 using RoleGame.Spells;
 using System;
 using System.Collections.Generic;
@@ -17,43 +18,49 @@ namespace RoleGame
     }
     public class CharacterWithMagic : Character
     {
-        public UInt32 currentMP;
-        public UInt32 maxMP;
-        public Dictionary<string, Spell> Spells;
+        public UInt32 CurrentMP { get; set; }
+        public UInt32 MaxMP { get; set; }
+        public Dictionary<string, Spell> Spells { get; set; }
+        public CharacterWithMagic(CharacterWithMagic clone) : base(clone)
+        {
+            CurrentMP = clone.CurrentMP;
+            MaxMP = clone.MaxMP;
+            Spells = clone.Spells;
+        }
         public CharacterWithMagic(string name, CharacterRace race, CharacterGender gender, UInt32 age) : base(name, race, gender, age)
         {
             Spells = new Dictionary<string, Spell>();
-            currentMP = 150;
-            maxMP = 150;
+            CurrentMP = 150;
+            MaxMP = 150;
         }
-
-        public CharacterWithMagic() : base()
+        public CharacterWithMagic() : base() { }
+        public CharacterWithMagic(bool i) : base(true)
         {
-            currentMP = 150;
-            maxMP = 150;
+            CurrentMP = 150;
+            MaxMP = 150;
             Spells = new Dictionary<string, Spell>();
         }
 
         public void RestoreMP(UInt32 MP)
         {
-            if(currentMP + MP > maxMP)
+            if(CurrentMP + MP > MaxMP)
             {
                 Console.WriteLine($"The {Name} has full mana");
-                currentMP = maxMP;
+                CurrentMP = MaxMP;
             }
             else
             {
                 Console.WriteLine($"The {Name} restored {MP} units of mana");
-                currentMP += MP;
+                CurrentMP += MP;
             }
         }
         
         public void Heal(Character character)
         {
-            if (((character.MaxHealth - character.CurrentHealth) * 2) <= currentMP)
+            if (((character.MaxHealth - character.CurrentHealth) * 2) <= CurrentMP)
                 character.Heal(character.MaxHealth - character.CurrentHealth);
             else
-                character.Heal(currentMP / 2);
+                character.Heal(CurrentMP / 2);
         }
 
         public void LearnSpell(SpellScroll spell)
@@ -197,7 +204,7 @@ namespace RoleGame
             $"race: {Race.ToString()}, gender: {Gender.ToString()}, age: {Age}\n" +
             $"speak: {(CanSpeak == true ? "yes" : "no")}, move: {(CanMove == true ? "yes" : "no")}\n" +
             $"Health: {CurrentHealth}/{MaxHealth}\n" +
-            $"Mana {currentMP}/{maxMP}\n" +
+            $"Mana {CurrentMP}/{MaxMP}\n" +
             $"Damage: {MinDamage}/{MaxDamage}\n" +
             $"Level: {Level}\n" +
             $"XP: {CurrXp}/{XpToNextLvl}\n" +

@@ -17,7 +17,7 @@ namespace RoleGame
         public override void Wiz(ref Character character, int force = 10)
         {
             int crrForce = force >= 100 ? 100 : force;
-            UInt32 MpForSpell = (UInt32)(characterWithMagic.currentMP * crrForce / 100);
+            UInt32 MpForSpell = (UInt32)(characterWithMagic.CurrentMP * crrForce / 100);
             if (MpForSpell < 50)
             {
                 Console.WriteLine("You can't use Armor spell with current mana");
@@ -25,18 +25,18 @@ namespace RoleGame
             }
             character.Shield += (int)Math.Round((double)MpForSpell / (double)MinMPValue);
             Console.WriteLine($"The {character.Name} shield has been increased to {character.Shield}");
-            characterWithMagic.currentMP -= MpForSpell;
+            characterWithMagic.CurrentMP -= MpForSpell;
         }
         public override void Wiz(ref Character character)
         {
-            if(characterWithMagic.currentMP < 50)
+            if(characterWithMagic.CurrentMP < 50)
             {
                 Console.WriteLine("You can't use Armor spell with current mana");
                 return;
             }
             character.Shield++;
             Console.WriteLine($"The {character.Name} shield has been increased to {character.Shield}");
-            characterWithMagic.currentMP -= MinMPValue;
+            characterWithMagic.CurrentMP -= MinMPValue;
         }
         public override string ToString() => Name;
     }

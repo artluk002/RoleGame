@@ -29,7 +29,7 @@ namespace RoleGame
                     character.State = CharacterState.Normal;
                 Console.WriteLine($"The {character.Name} is {character.State.ToString()}");
             }
-            characterWithMagic.currentMP -= MinMPValue;
+            characterWithMagic.CurrentMP -= MinMPValue;
         }
         public override string ToString() => Name;
     }

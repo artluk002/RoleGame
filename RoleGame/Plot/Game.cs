@@ -20,7 +20,7 @@ namespace RoleGame.Plot
         {
             Characters = new List<Character>();
             CurrFloor = 1;
-            BossNames = new string[] { "Jhon", "Valera", "Vanya" };
+            BossNames = new string[] { "Agent Smith", "Voldemort", "Witch", "Dragon Master", "Swamp Golem", "Fire lord", "Big serpent", "Aragog", "Tentalaklone", "Dungeon Master", "Ice Dragon", "Stonebird", "Fallen Warrior", "King of the dead", "Zeus", "Hydra", "Peregarych", "Cannibal", "Tony Montana", "Jack Torrent", "Hannibal Lecter", "Darth Vader", "Evil Witch", "Cast iron master", "Black Tolik", "Satan", "Scribbler", "Waido", "Fomenochka", "Gopnik", "Madara", "The Dark Knight", "Mafia", "Dark Ripper", "Cyclops", "Devil", "Plant-eater", "Dinosaur", "Alien invader" };
             r = new Random();
         }
         public void Run()
@@ -36,6 +36,8 @@ namespace RoleGame.Plot
             Console.Write("Enter count of palyers: ");
             PlayersCount = int.Parse(Console.ReadLine());
             string answer;
+            JsonOperations json = new JsonOperations();
+            List<Character> list = json.ReadCharacters();
             for (int i = 0; i < PlayersCount; i++)
             {
                 do
@@ -44,27 +46,53 @@ namespace RoleGame.Plot
                     Console.Write("yes/no: ");
                     answer = Console.ReadLine().ToLower();
                 } while (answer != "yes" && answer != "no");
+                
                 switch (answer)
                 {
                     case "yes":
-                        ////
+                        
+                        foreach (Character character in list)
+                            Console.WriteLine(character);
+
+                        bool validChoice = false;
+                        string Char_name;
+                        do
+                        {
+                            Console.Write("Enter name: ");
+                            Char_name = Console.ReadLine();
+                            for (int j = 0; j < list.Count; j++) 
+                            {
+                                if (list[j].Name == Char_name)
+                                {
+                                    Characters.Add(list[j]);
+                                    list.RemoveAt(j); 
+                                    validChoice = true;
+                                    break;
+                                }
+                            }
+                        } while (!validChoice);
                         break;
                     case "no":
                         switch (r.Next(1, 3))
                         {
                             case 1:
-                                Characters.Add(new Character());
+                                Characters.Add(new Character(true));
                                 break;
                             case 2:
-                                Characters.Add(new CharacterWithMagic());
+                                Characters.Add(new CharacterWithMagic(true));
                                 break;
                             default:
-                                Characters.Add(new Character());
+                                Characters.Add(new Character(true));
                                 break;
                         }
+                        //if()
                         break;
                 }
+                Console.Clear();
             }
+            JsonOperations json1 = new JsonOperations();
+            for (int j = 0; j < Characters.Count; j++)
+                json1.SaveCharacters(Characters[j]);
             Characters[0].CreateTeam("AAA");
             for (int i = 0; i < Characters.Count; i++)
                 if (i != 0)
@@ -72,17 +100,7 @@ namespace RoleGame.Plot
                     Characters[0].team.AddCharacter(Characters[i]);
                     Characters[i].team = Characters[0].team;
                 }
-        }
-        public async void Save()
-        {
-            if (!File.Exists("Characters.json"))
-                File.Create("Characters.json").Close();
-            
-            using (FileStream fs = new FileStream("Characters.json", FileMode.Append, FileAccess.Write))
-            {
-                await JsonSerializer.SerializeAsync<List<Character>>(fs, Characters, new JsonSerializerOptions { WriteIndented = true});
-                Console.WriteLine("Data has been saved to file");
-            }
+
         }
         public void BossBattle()
         {
@@ -168,7 +186,7 @@ namespace RoleGame.Plot
                                 break;
                         }
                     }
-                    catch (Exception ex) { }
+                    catch (Exception) { }
                     Console.Clear();
                 }
 
@@ -191,7 +209,15 @@ namespace RoleGame.Plot
                     Console.ForegroundColor = ConsoleColor.White;
                     foreach (var player in Characters)
                         player.Inventory.AddItem(GetRandomLoot());
-                    Save();
+                    JsonOperations json = new JsonOperations();
+                    foreach(var player in Characters)
+                    {
+                        if (player.State == CharacterState.Dead)
+                            player.State = CharacterState.Normal;
+                        player.Heal(player.MaxHealth);
+                    }    
+                    for(int j = 0; j < Characters.Count; j++)
+                        json.SaveCharacters(Characters[j]);
                     return;
                 }
                 Character attakedCH;
@@ -209,7 +235,17 @@ namespace RoleGame.Plot
                 Console.Clear();
             }
         }
-        public static Artifact[] artifacts = new Artifact[] { new DeadWaterBottle(BottleSize.Low), new DeadWaterBottle(BottleSize.Medium), new DeadWaterBottle(BottleSize.High), new DecoctionOfFrogLegs(), new LivingWaterBottle(BottleSize.Low), new LivingWaterBottle(BottleSize.Medium), new LivingWaterBottle(BottleSize.High), new PoisonousSaliva(), new Staff(), new VasiliskEye() };
+        public void HealindRoom()
+        {
+            CharacterWithMagic wizzard = new CharacterWithMagic("Gendalf", CharacterRace.Person, CharacterGender.Male, 1457);
+            wizzard.SetLevel(3000);
+            wizzard.CurrentMP = wizzard.MaxMP;
+            wizzard.CurrentHealth = wizzard.MaxHealth;
+            wizzard.LearnSpell(SpellScroll.Revive);
+            wizzard.LearnSpell(SpellScroll.AddHealth);
+            Revive revive = new Revive(wizzard);
+        }
+        public static Artifact[] artifacts = new Artifact[] { new DeadWaterBottle(BottleSize.Low), new DeadWaterBottle(BottleSize.Medium), new DeadWaterBottle(BottleSize.High), new DecoctionOfFrogLegs(), new LivingWaterBottle(BottleSize.Low), new LivingWaterBottle(BottleSize.Medium), new LivingWaterBottle(BottleSize.High), new PoisonousSaliva(), new Staff(), new VasiliskEye(), new RandomSpellScroll()};
         public Artifact GetRandomLoot() => artifacts[r.Next(0, artifacts.Length)];
 
     }

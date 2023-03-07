@@ -8,7 +8,7 @@ namespace RoleGame.Artifactes
 {
     public class VasiliskEye : Artifact
     {
-        public static string Name = "PoisonousSaliva";
+        public static string Name = "VasiliskEye";
         public override string GetName() => Name;
         public VasiliskEye() : base(0, false)
         {
