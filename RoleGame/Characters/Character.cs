@@ -52,16 +52,32 @@ namespace RoleGame
         public event HealthHandler Health = (sender, e) =>
         {
             double HealthPercent = ((double)e.Health / (double)e.MaxHealth) * 100;
-            if (HealthPercent >= 10) {
-                if ((sender as Character).State != CharacterState.Poisoned | (sender as Character).State != CharacterState.Painful | (sender as Character).State != CharacterState.Paralyzed)
-                    (sender as Character).State = CharacterState.Normal;
+            if ((sender as Character).ParalazedCount == 0)
+            { 
+                (sender as Character).State = CharacterState.Normal;
+                (sender as Character).CanMove= true;
             }
-            else if (HealthPercent < 10 & HealthPercent > 0) {
-                if ((sender as Character).State != CharacterState.Poisoned | (sender as Character).State != CharacterState.Painful | (sender as Character).State != CharacterState.Paralyzed)
+            if (HealthPercent >= 10)
+            {
+                if ((sender as Character).State != CharacterState.Poisoned & (sender as Character).State != CharacterState.Painful & (sender as Character).State != CharacterState.Paralyzed)
+                {
+                    (sender as Character).State = CharacterState.Normal;
+                    (sender as Character).CanMove = true;
+                }
+            }
+            else if (HealthPercent < 10 & HealthPercent > 0)
+            {
+                if ((sender as Character).State != CharacterState.Poisoned & (sender as Character).State != CharacterState.Painful & (sender as Character).State != CharacterState.Paralyzed)
+                {
                     (sender as Character).State = CharacterState.Weakened;
+                    (sender as Character).CanMove = true;
+                }
             }
             else if (HealthPercent <= 0)
+            {
                 (sender as Character).State = CharacterState.Dead;
+                (sender as Character).CanMove= false;
+            }
         };
         public event XPHandler AddXP = (sender, e) =>
         {
@@ -134,33 +150,11 @@ namespace RoleGame
             Level = 1;
             XpToNextLvl = 100;
             CurrXp = 0;
-            CanSpeak = false;
-            CanMove = false;
+            CanSpeak = true;
+            CanMove = true;
             Inventory = new Inventory();
+            ParalazedCount = 0;
         }
-        public Character(Character clone)
-        {
-            Id = clone.Id;
-            Name = clone.Name;
-            State = clone.State;
-            Race = clone.Race;
-            Gender = clone.Gender;
-            Age = clone.Age;
-            CurrentHealth = clone.CurrentHealth;
-            MaxHealth = clone.MaxHealth;
-            MinDamage = clone.MinDamage;
-            MaxDamage = clone.MaxDamage;
-            Level = clone.Level;
-            XpToNextLvl = clone.XpToNextLvl;
-            CurrXp = clone.CurrXp;
-            CanSpeak = clone.CanSpeak;
-            CanMove = clone.CanMove;
-            Inventory = clone.Inventory;
-            r = new Random();
-        }
-        /// <summary>
-        /// конструктор без параметров для создания персонажа
-        /// </summary>
         public Character() { }
         public Character(bool i)
         {
@@ -231,11 +225,12 @@ namespace RoleGame
                 Level = 1;
                 XpToNextLvl = 100;
                 CurrXp = 0;
-                CanSpeak = false;
-                CanMove = false;
+                CanSpeak = true;
+                CanMove = true;
                 MinDamage = 10;
                 MaxDamage = 15;
                 Inventory = new Inventory();
+                ParalazedCount = 0;
             }
             catch (Exception ex) { Console.WriteLine(ex.Message); }
         }
@@ -268,9 +263,9 @@ namespace RoleGame
         {
             if (r == null)
                 r = new Random();
-            if (State == CharacterState.Paralyzed)
+            if (State == CharacterState.Paralyzed || ParalazedCount > 0)
             {
-                Console.WriteLine($"You are paralyzed, you can't attak");
+                Console.WriteLine($"The {Name} is paralyzed and can't attak");
                 return;
             }
             else if (State == CharacterState.Weakened)
@@ -284,12 +279,13 @@ namespace RoleGame
             {
                 Console.ForegroundColor = ConsoleColor.Cyan;
                 Console.WriteLine($"The {Name} Painful, attack is weakened by 50%");
+                Console.ForegroundColor = ConsoleColor.White;
                 character.TakeDamage((UInt32)r.Next((int)(MinDamage * 0.5), (int)(MaxDamage * 0.5 + 1)));
             }
             else if (State == CharacterState.Poisoned)
             {
                 Console.ForegroundColor = ConsoleColor.Magenta;
-                Console.WriteLine($"The {Name} Weakened, attack is weakened by 40%");
+                Console.WriteLine($"The {Name} Poisoned, attack is weakened by 40%");
                 Console.ForegroundColor = ConsoleColor.White;
                 character.TakeDamage((UInt32)r.Next((int)(MinDamage * 0.6), (int)(MaxDamage * 0.6 + 1)));
             }
@@ -345,6 +341,8 @@ namespace RoleGame
                     }
                 }
             }
+            if (ParalazedCount > 0)
+                ParalazedCount--;
             if (Health != null)
                 Health(this, new PersonArgs(CurrentHealth, MaxHealth));
         }
@@ -397,7 +395,7 @@ namespace RoleGame
                     i = int.Parse(Console.ReadLine());
                 } while (i > team.Characters.Count | i < 1);
                 team.Characters[i].Inventory.AddItem(Inventory.Items[ItemName]);
-                Inventory.RemoveItem(Inventory.Items[ItemName]);
+                Inventory.RemoveItem(ItemName);
             }
         }
         public override string ToString() => $"==Character: {Name}==\n" +
@@ -409,6 +407,7 @@ namespace RoleGame
             $"Level: {Level}\n" +
             $"XP: {CurrXp}/{XpToNextLvl}\n" +
             $"Shields: {Shield}\n" +
+            $"Inventory: {$"{Inventory.GetItems()}"}\n" +
             $"============={Functions.Fill("=", Name.Length)}==";
     }
 }

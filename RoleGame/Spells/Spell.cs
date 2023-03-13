@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,12 +16,13 @@ namespace RoleGame
 
     public abstract class Spell : IMagic
     {
-        public UInt32 MinMPValue;
+        public UInt32 MinMPValue { get; set; }
         public static string Name = "Spell";
-        public SpellType type;
+        public SpellType type { get; set; }
         bool IsVerbalSpell;
         bool IsMotorSpell;
-        public CharacterWithMagic characterWithMagic;
+        [JsonIgnore]
+        public CharacterWithMagic characterWithMagic { get; set; }
         public abstract void Wiz(ref Character character, int force = 10);
         public abstract void Wiz(ref Character character);
         public Spell(UInt32 minMPValue, bool isVerbalSpell, bool isMotorSpell, CharacterWithMagic characterWithMagic)

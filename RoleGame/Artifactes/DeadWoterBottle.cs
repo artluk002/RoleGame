@@ -6,7 +6,7 @@ namespace RoleGame
         public static string Name = "DeadWaterBottle";
         public BottleSize Size { get; set; }
         public override string GetName() => Size + Name;
-        public DeadWaterBottle(BottleSize size) : base(0, false)
+        public DeadWaterBottle(BottleSize size) : base(0)
         {
             this.Size = size;
             Description = "- Restores the mana of a character who owns magic,\n" +

@@ -10,7 +10,7 @@ namespace RoleGame.Artifactes
     {
         public static string Name = "PoisonousSaliva";
         public override string GetName() => Name;
-        public PoisonousSaliva() : base(20, true)
+        public PoisonousSaliva() : base(100)
         {
             Description = "- Poisons and damages the character";
             type = SpellType.Force;
@@ -19,17 +19,27 @@ namespace RoleGame.Artifactes
         {
             if (character.State == CharacterState.Dead)
             {
-                Console.WriteLine("This artifact can't be used because the enemy is dead"); 
+                Console.WriteLine("This artifact can't be used because the enemy is dead");
                 return;
             }
             else
             {
-                if (character.State == CharacterState.Weakened || character.State == CharacterState.Normal)
+                UInt32 damage;
+                if (Forse - force < 0)
                 {
-                    character.State = CharacterState.Poisoned;
-                    character.TakeDamage((UInt32)force);
-                    Console.WriteLine($"The {character.Name} is {character.State.ToString()} and current health is {character.CurrentHealth}");
+                    damage = Forse;
+                    Forse = 0;
                 }
+                else
+                {
+                    Forse -= (UInt32)force;
+                    damage = (UInt32)force;
+                }
+                if (character.State == CharacterState.Paralyzed)
+                    character.ParalazedCount = 0;
+                character.State = CharacterState.Poisoned;
+                character.TakeDamage(damage);
+                Console.WriteLine($"The {character.Name} is {character.State.ToString()} and current health is {character.CurrentHealth}");
             }
         }
         public override void Wiz(ref Character character)
@@ -39,4 +49,4 @@ namespace RoleGame.Artifactes
         public override string ToString() => $"- {Count}.\n{Name}, {Description}";
     }
 
-}
+} 

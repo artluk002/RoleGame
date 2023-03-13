@@ -21,12 +21,6 @@ namespace RoleGame
         public UInt32 CurrentMP { get; set; }
         public UInt32 MaxMP { get; set; }
         public Dictionary<string, Spell> Spells { get; set; }
-        public CharacterWithMagic(CharacterWithMagic clone) : base(clone)
-        {
-            CurrentMP = clone.CurrentMP;
-            MaxMP = clone.MaxMP;
-            Spells = clone.Spells;
-        }
         public CharacterWithMagic(string name, CharacterRace race, CharacterGender gender, UInt32 age) : base(name, race, gender, age)
         {
             Spells = new Dictionary<string, Spell>();
@@ -172,6 +166,7 @@ namespace RoleGame
                     Console.WriteLine("Would you like to use this spell with or without power?");
                     Console.Write("Enter with or without: ");
                     string choose = Console.ReadLine().ToLower();
+                    
                     switch(choose)
                     {
                         case "with":
@@ -199,6 +194,11 @@ namespace RoleGame
                     break;
             }
         }
+        public void SpellsComing()
+        {
+            foreach(var c in Spells)
+                c.Value.characterWithMagic = this;
+        }
         public override string ToString() => $"==Character: {Name}==\n" +
             $"Id: {Id},state: {State.ToString()}\n" +
             $"race: {Race.ToString()}, gender: {Gender.ToString()}, age: {Age}\n" +
@@ -210,6 +210,7 @@ namespace RoleGame
             $"XP: {CurrXp}/{XpToNextLvl}\n" +
             $"Shields: {Shield}\n" +
             $"Spells: ({string.Join(", ", Spells.Values)})\n" +
+            $"Inventory: {$"{Inventory.GetItems()}"}\n" +
             $"============={Functions.Fill("=", Name.Length)}==";
     }
 }

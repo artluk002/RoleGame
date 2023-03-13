@@ -6,7 +6,7 @@ namespace RoleGame
     {
 
         public static string Name = "Staff";
-        public Staff() : base(100, true)// допилить восстановление мощьности
+        public Staff() : base(100)// допилить восстановление мощьности
         {
             Description = "- Deals damage to the enemy. Can be used until its\n " +
                 "power runs out, at which point it becomes unusable.";

@@ -10,7 +10,7 @@ namespace RoleGame.Artifactes
     {
         public static string Name = "DecoctionOfFrogLegs";
         public override string GetName() => Name;
-        public DecoctionOfFrogLegs() : base(0, false)
+        public DecoctionOfFrogLegs() : base(0)
         {
             Description = "- Stops the effect of the poison. Can be\n " +
                 "used on yourself or teammates, non-renewable.";

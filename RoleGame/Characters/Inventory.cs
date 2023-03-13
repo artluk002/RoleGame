@@ -24,17 +24,21 @@ namespace RoleGame.Characters
             else
                 Items.Add(item.GetName(), item);
         }
-        public void RemoveItem(Artifact item)
+        public void RemoveItem(string itemName)
         {
-            if (Items.ContainsKey(item.GetName()))
+            if (Items.ContainsKey(itemName))
             {
-                if (Items[item.GetName()].Count > 1)
-                    Items[item.GetName()].Count--;
+                if (Items[itemName].Count > 1)
+                {
+                    Items[itemName].Count--;
+                    Items[itemName].Forse = 100;
+                }
                 else
-                    Items.Remove(item.GetName());
+                    Items.Remove(itemName);
             }
 
         }
+        public String GetItems() => string.Join(", ", Items.Keys);
         public bool IsItIn(string name) => Items.ContainsKey(name);
         public void PrintItems()
         {

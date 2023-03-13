@@ -15,7 +15,7 @@ namespace RoleGame
         public BottleSize Size { get; set; }
         public override string GetName() => Size + Name;
 
-        public LivingWaterBottle(BottleSize size) : base(0, false) 
+        public LivingWaterBottle(BottleSize size) : base(0) 
         {
             this.Size = size;
             Description = "- Restores character's health, can be used on yourself or \n " +

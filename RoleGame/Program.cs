@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 
 namespace RoleGame
 {
-    public delegate void InventoryHandler(object sender, InventoryArgs e);
     public class Program
     {
         static void Main(string[] args)
@@ -71,11 +70,12 @@ namespace RoleGame
                     Console.WriteLine(true);
                 else
                     Console.WriteLine(false);
-
+            
             }*/
             Game g = new Game();
-            g.Precondition();
-            g.BossBattle();
+            g.Run();
+            /*g.Precondition();
+            g.BossBattle();*/
             Console.ReadKey();
         }
     }

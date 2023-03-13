@@ -10,7 +10,7 @@ namespace RoleGame.Artifactes
     {
         public static string Name = "VasiliskEye";
         public override string GetName() => Name;
-        public VasiliskEye() : base(0, false)
+        public VasiliskEye() : base(0)
         {
             Description = "- Paralyzes the enemy, non-renewable.";
         }
@@ -31,6 +31,8 @@ namespace RoleGame.Artifactes
                 if (character.State != CharacterState.Paralyzed)
                 {
                     character.State = CharacterState.Paralyzed;
+                    character.ParalazedCount = 3;
+                    character.CanMove = false;
                     Console.WriteLine($"The {character.Name} is {character.State.ToString()} ");
                 }
             }

@@ -3,8 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
@@ -12,10 +14,12 @@ namespace RoleGame.Plot
 {
     public class Game
     {
-        List<Character> Characters;
-        int CurrFloor;
-        string[] BossNames;
-        Random r;
+        private List<Character> Characters;
+        public string Name { get; set; }
+        public int CurrFloor { get; set; }
+        private string[] BossNames;
+        private Random r;
+        private bool heal;
         public Game()
         {
             Characters = new List<Character>();
@@ -25,9 +29,20 @@ namespace RoleGame.Plot
         }
         public void Run()
         {
+            Precondition();
             while (true)
             {
-
+                foreach (Character character in Characters)
+                    Console.WriteLine(character);
+                Console.Write("1 - Boss fighting\n" +
+                "2 - Use Item\n" +
+                "3 - Pass Item" +
+                "4 - Use Magic\n" +
+                "5 - Save Characters\n" +
+                "6 - Save Game\n" +
+                "7 - Healing room\n" +
+                "Enter action: ");
+                Menu();
             }
         }
         public void Precondition()
@@ -46,11 +61,11 @@ namespace RoleGame.Plot
                     Console.Write("yes/no: ");
                     answer = Console.ReadLine().ToLower();
                 } while (answer != "yes" && answer != "no");
-                
+
                 switch (answer)
                 {
                     case "yes":
-                        
+
                         foreach (Character character in list)
                             Console.WriteLine(character);
 
@@ -60,12 +75,14 @@ namespace RoleGame.Plot
                         {
                             Console.Write("Enter name: ");
                             Char_name = Console.ReadLine();
-                            for (int j = 0; j < list.Count; j++) 
+                            for (int j = 0; j < list.Count; j++)
                             {
                                 if (list[j].Name == Char_name)
                                 {
+                                    if (list[j] as CharacterWithMagic != null)
+                                        (list[j] as CharacterWithMagic).SpellsComing();
                                     Characters.Add(list[j]);
-                                    list.RemoveAt(j); 
+                                    list.RemoveAt(j);
                                     validChoice = true;
                                     break;
                                 }
@@ -90,6 +107,32 @@ namespace RoleGame.Plot
                 }
                 Console.Clear();
             }
+            do
+            {
+                Console.WriteLine("Do you have a map?");
+                Console.Write("yes/no: ");
+                answer = Console.ReadLine().ToLower();
+            } while (answer != "yes" && answer != "no");
+            switch (answer)
+            {
+                case "yes":
+                    List<Game> games = json.ReadGame();
+                    foreach (Game game in games)
+                        Console.WriteLine($"{game.Name}, {game.CurrFloor}");
+                    Console.Write("Enter name of game");
+                    string gameName = Console.ReadLine();
+                    foreach (Game game in games)
+                        if (game.Name == gameName)
+                        {
+                            this.Name = game.Name;
+                            this.CurrFloor = game.CurrFloor;
+                            break;
+                        }
+                    break;
+                case "no":
+                default:
+                    break;
+            }
             JsonOperations json1 = new JsonOperations();
             for (int j = 0; j < Characters.Count; j++)
                 json1.SaveCharacters(Characters[j]);
@@ -104,6 +147,7 @@ namespace RoleGame.Plot
         }
         public void BossBattle()
         {
+            Console.Clear();
             Character Boss = Character.SummonBoss(CurrFloor, BossNames[r.Next(0, BossNames.Length)], CharacterGender.Non, (CharacterRace)r.Next(0, 5), (UInt32)r.Next(100, 1001));
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("!!! Boss !!!");
@@ -123,7 +167,7 @@ namespace RoleGame.Plot
                             "3 - Pass item\n" +
                             $"{(player as CharacterWithMagic != null ? "4 - Use Spell" : "")}");
                         Console.Write("Enter action: ");
-                        action = int.Parse(Console.ReadLine());
+                        3action = int.Parse(Console.ReadLine());
                         switch (action)
                         {
                             case 1:
@@ -157,6 +201,8 @@ namespace RoleGame.Plot
                                             Character ch = Characters[id];
                                             player.Inventory.Items[ItemName].Wiz(ref ch, force);
                                         }
+                                        if (player.Inventory.Items[ItemName].Forse == 0)
+                                            player.Inventory.RemoveItem(ItemName);
                                         break;
                                     case SpellType.Without:
                                         if (id == Characters.Count)
@@ -166,6 +212,7 @@ namespace RoleGame.Plot
                                             Character ch = Characters[id];
                                             player.Inventory.Items[ItemName].Wiz(ref ch);
                                         }
+                                        player.Inventory.RemoveItem(ItemName);
                                         break;
                                     default:
                                         break;
@@ -178,7 +225,7 @@ namespace RoleGame.Plot
                                 if (player as CharacterWithMagic == null)
                                 {
                                     Console.WriteLine("you aren't Wizard!");
-                                    return;
+                                    break;
                                 }
                                 ((CharacterWithMagic)player).MagicSpell();
                                 break;
@@ -189,8 +236,6 @@ namespace RoleGame.Plot
                     catch (Exception) { }
                     Console.Clear();
                 }
-
-
                 int DeadCount = 0;
                 for (int i = 0; i < Characters.Count; i++)
                     if (Characters[i].State == CharacterState.Dead)
@@ -210,14 +255,9 @@ namespace RoleGame.Plot
                     foreach (var player in Characters)
                         player.Inventory.AddItem(GetRandomLoot());
                     JsonOperations json = new JsonOperations();
-                    foreach(var player in Characters)
-                    {
-                        if (player.State == CharacterState.Dead)
-                            player.State = CharacterState.Normal;
-                        player.Heal(player.MaxHealth);
-                    }    
-                    for(int j = 0; j < Characters.Count; j++)
+                    for (int j = 0; j < Characters.Count; j++)
                         json.SaveCharacters(Characters[j]);
+                    CurrFloor++;
                     return;
                 }
                 Character attakedCH;
@@ -235,17 +275,148 @@ namespace RoleGame.Plot
                 Console.Clear();
             }
         }
-        public void HealindRoom()
+        public void Menu()
         {
-            CharacterWithMagic wizzard = new CharacterWithMagic("Gendalf", CharacterRace.Person, CharacterGender.Male, 1457);
-            wizzard.SetLevel(3000);
-            wizzard.CurrentMP = wizzard.MaxMP;
-            wizzard.CurrentHealth = wizzard.MaxHealth;
-            wizzard.LearnSpell(SpellScroll.Revive);
-            wizzard.LearnSpell(SpellScroll.AddHealth);
-            Revive revive = new Revive(wizzard);
+            try
+            {
+                JsonOperations json = new JsonOperations();
+                int action;
+                action = int.Parse(Console.ReadLine());
+
+                switch (action)
+                {
+                    case 1:
+                        BossBattle();
+                        break;
+                    case 2:
+                        Console.WriteLine("Choose character: ");
+                        for (int i = 0; i < Characters.Count; i++)
+                            Console.WriteLine($"{i}: {Characters[i]}");
+                        int num;
+                        do
+                        {
+                            num = int.Parse(Console.ReadLine());
+                        } while (num < 0 & num >= Characters.Count);
+
+                        Characters[num].Inventory.PrintItems();
+                        Console.Write("Enter name of artifact you want to use: ");
+                        string ItemName = Console.ReadLine();
+                        if (!Characters[num].Inventory.IsItIn(ItemName))
+                        {
+                            Console.WriteLine("You haven't this Artifact");
+                            break;
+                        }
+                        Console.WriteLine("Select the entity on which you want to use an artifact");
+                        for (int i = 0; i < Characters.Count; i++)
+                            Console.WriteLine($"{i}: {Characters[i]}");
+                        Console.WriteLine("Enter num: ");
+                        int id = int.Parse(Console.ReadLine());
+                        int force = 0;
+                        switch (Characters[num].Inventory.Items[ItemName].type)
+                        {
+                            case SpellType.Force:
+                                Console.Write("Enter force: ");
+                                force = int.Parse(Console.ReadLine());
+                                Character ch = Characters[id];
+                                Characters[num].Inventory.Items[ItemName].Wiz(ref ch, force);
+                                if (Characters[num].Inventory.Items[ItemName].Forse == 0)
+                                    Characters[num].Inventory.RemoveItem(ItemName);
+                                break;
+                            case SpellType.Without:
+                                ch = Characters[id];
+                                Characters[num].Inventory.Items[ItemName].Wiz(ref ch);
+                                Characters[num].Inventory.RemoveItem(ItemName);
+                                break;
+                            default:
+                                break;
+                        }
+                        break;
+                    case 3:
+                        Console.WriteLine("Choose character: ");
+                        for (int i = 0; i < Characters.Count; i++)
+                            Console.WriteLine($"{i}: {Characters[i]}");
+                        do
+                        {
+                            num = int.Parse(Console.ReadLine());
+                        } while (num < 0 & num >= Characters.Count);
+                        Console.Clear();
+                        Characters[num].PassItem();
+                        break;
+                    case 4:
+                        Console.WriteLine("Choose character: ");
+                        for (int i = 0; i < Characters.Count; i++)
+                            Console.WriteLine($"{i}: {Characters[i]}");
+                        do
+                        {
+                            num = int.Parse(Console.ReadLine());
+                        } while (num < 0 & num >= Characters.Count);
+                        if (Characters[num] as CharacterWithMagic == null)
+                        {
+                            Console.WriteLine("you aren't Wizard!");
+                            break;
+                        }
+                        ((CharacterWithMagic)Characters[num]).MagicSpell();
+                        break;
+                    case 5:
+                        for (int j = 0; j < Characters.Count; j++)
+                            json.SaveCharacters(Characters[j]);
+                        break;
+                    case 6:
+                        if (Name == null)
+                        {
+                            Console.Write("Enter name of save: ");
+                            Name = Console.ReadLine();
+                        }
+                        json.SaveGame(this);
+                        break;
+                    case 7:
+                        ConsoleKey key;
+                        heal = true;
+                        while (heal)
+                        {
+                            Console.WriteLine("Tap `Enter` to leave Healing room");
+                            foreach (Character character in Characters)
+                                Console.WriteLine(character);
+                            WaitClick();
+                            Thread.Sleep(2000);
+                            Healing();
+                            Console.Clear();
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
-        public static Artifact[] artifacts = new Artifact[] { new DeadWaterBottle(BottleSize.Low), new DeadWaterBottle(BottleSize.Medium), new DeadWaterBottle(BottleSize.High), new DecoctionOfFrogLegs(), new LivingWaterBottle(BottleSize.Low), new LivingWaterBottle(BottleSize.Medium), new LivingWaterBottle(BottleSize.High), new PoisonousSaliva(), new Staff(), new VasiliskEye(), new RandomSpellScroll()};
+        async Task WaitClick()
+        {
+            Task.Run(() =>
+            {
+                ConsoleKey key = Console.ReadKey().Key;
+                switch(key)
+                {
+                    case ConsoleKey.Enter:
+                        heal = false;
+                        break;
+                    default:
+                        break;
+                }
+            });
+        }
+        public void Healing()
+        {
+            for (int i = 0; i < Characters.Count; i++)
+            {
+                Characters[i].Heal(2);
+                if (Characters[i] as CharacterWithMagic != null)
+                    (Characters[i] as CharacterWithMagic).RestoreMP(2);
+            }
+        }
+        public static Artifact[] artifacts = new Artifact[] { new DeadWaterBottle(BottleSize.Low), new DeadWaterBottle(BottleSize.Medium), new DeadWaterBottle(BottleSize.High), new DecoctionOfFrogLegs(), new LivingWaterBottle(BottleSize.Low), new LivingWaterBottle(BottleSize.Medium), new LivingWaterBottle(BottleSize.High), new PoisonousSaliva(), new Staff(), new VasiliskEye(), new RandomSpellScroll() };
         public Artifact GetRandomLoot() => artifacts[r.Next(0, artifacts.Length)];
 
     }

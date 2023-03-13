@@ -19,12 +19,11 @@ namespace RoleGame.Artifactes
     public class RandomSpellScroll : Artifact
     {
         public static string Name = "RandomSpellScroll";
-        public SpellScroll SpellType { get; set; }
 
-        public RandomSpellScroll() : base(0, false)
+        public RandomSpellScroll() : base(0)
         {
-            Random r = new Random();
-            SpellType = (SpellScroll)r.Next(0, 6);
+            Description = "- this scroll contains a random spell";
+            type = SpellType.Without;
         }
 
         public override string GetName() => Name;
@@ -36,8 +35,9 @@ namespace RoleGame.Artifactes
 
         public override void Wiz(ref Character character)
         {
+            Random r = new Random();
             if (character as CharacterWithMagic != null)
-                (character as CharacterWithMagic).LearnSpell(SpellType);
+                (character as CharacterWithMagic).LearnSpell((SpellScroll)r.Next(0, 6));
             else
                 return;
         }

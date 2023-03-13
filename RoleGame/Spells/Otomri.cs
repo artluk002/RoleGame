@@ -20,7 +20,7 @@ namespace RoleGame.Spells
 
         public override void Wiz(ref Character character)
         {
-            if(character.State != CharacterState.Paralyzed)
+            if(character.State != CharacterState.Paralyzed && character.ParalazedCount == 0)
             {
                 Console.WriteLine($"The {character.Name} isn't Paralyzed!");
             }
@@ -30,6 +30,7 @@ namespace RoleGame.Spells
                     character.State = CharacterState.Weakened;
                 else
                     character.State = CharacterState.Normal;
+                character.ParalazedCount = 0;
                 Console.WriteLine($"The {character.Name} is {character.State.ToString()}");
                 character.CurrentHealth = 1;
             }

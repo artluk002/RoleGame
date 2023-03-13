@@ -96,7 +96,6 @@
     <Compile Include="Characters\Team.cs" />
     <Compile Include="Characters\XpArgs.cs" />
     <Compile Include="Plot\Game.cs" />
-    <Compile Include="Plot\InventoryArgs.cs" />
     <Compile Include="Plot\JsonOperations.cs" />
     <Compile Include="Spells\AddHealth.cs" />
     <Compile Include="Spells\Antidote.cs" />
